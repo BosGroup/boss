@@ -30,7 +30,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/standard.json",
+					url : "../../standardAction_pageQuery.action",
 					idField : 'id',
 					columns : columns
 				});
@@ -49,7 +49,18 @@
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					//判断用户勾选的数据的条数
+					var result = $("#grid").datagrid("getSelections")
+					if(result.length == 1){
+						//勾选一条数据的时候才可以进行修改
+						//打开窗口
+						$("#standardWindow").window("open")
+						//回填数据到form表单, load读取记录填充到表单中
+						//因为SpringDataJPA的save方法有修改功能,所以点保存后这里会自动实现修改并保存
+						$("#standardForm").form("load",result[0])
+					}else{
+						$.messager.alert("提示","您只能选择一条数据进行修改", "info")
+					}
 				}
 			},{
 				id : 'button-delete',

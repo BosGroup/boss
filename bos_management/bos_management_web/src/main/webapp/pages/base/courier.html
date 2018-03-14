@@ -164,6 +164,15 @@
 				alert("双击表格数据...");
 			}
 		</script>
+		
+		<script type="text/javascript">
+			// 提交快递员的数据
+			function submitData(){
+				if($("#courierForm").form("validate")){
+					$("#courierForm").submit();
+				}
+			}
+		</script>
 	</head>
 
 	<body class="easyui-layout" style="visibility:hidden;">
@@ -173,12 +182,13 @@
 		<div class="easyui-window" title="对收派员进行添加或者修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 			<div region="north" style="height:31px;overflow:hidden;" split="false" border="false">
 				<div class="datagrid-toolbar">
-					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+					<a onclick="submitData()" id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
 				</div>
 			</div>
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
-				<form>
+			
+				<form id="courierForm" method="post" action="../../courierAction_save.action">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="4">收派员信息</td>

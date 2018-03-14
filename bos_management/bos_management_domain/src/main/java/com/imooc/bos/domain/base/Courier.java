@@ -61,7 +61,13 @@ public class Courier {
     @ManyToOne
     @JoinColumn(name = "C_TAKETIME_ID")
     private TakeTime takeTime;
-
+    
+    //在hibernate框架中,多对一/一对多都可能发生懒加载异常
+    //在springDateJpa中只有集合属性会发生懒加载异常(一对多/多对多)
+    //解决办法:1.在集合前增加transient关键字(导致在整个项目中都不会再序列化这个对象了)
+    //2.在注解中增加fetch=FetchType.EAGER属性(会立即查询,但页面不需要)
+    //3.web.xml配置(消耗资源)
+    //4.在action中返回json数据时排除没有使用到的数据,避免懒加载
     @ManyToMany(mappedBy = "couriers")
     private Set<FixedArea> fixedAreas = new HashSet<FixedArea>();
 

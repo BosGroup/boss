@@ -154,7 +154,7 @@ public class StandardRepositoryTest {
     // 自定义删除语句
     @Test
     public void test13() {
-        standardRepository.deleteByName("张三");
+        standardRepository.deleteByName("张三三");
 
     }
 }

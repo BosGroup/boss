@@ -25,5 +25,11 @@ public interface CourierService {
      */
     Page<Courier> findAll(Pageable pageable);
 
+    /**  
+     * 批量删除快递员信息
+     * @param ids  
+     */
+    void batchDel(String ids);
+
 }
   

@@ -1,5 +1,6 @@
 package com.imooc.bos.service.base.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.imooc.bos.dao.CourierRepository;
 import com.imooc.bos.domain.base.Courier;
 import com.imooc.bos.service.base.CourierService;
+
 
 /**  
  * ClassName:CourierServiceImpl <br/>  
@@ -31,6 +33,19 @@ public class CourierServiceImpl implements CourierService {
     @Override
     public Page<Courier> findAll(Pageable pageable) {
         return courierRepository.findAll(pageable);
+    }
+
+    @Override
+    public void batchDel(String ids) {
+        // 真实开发中只有逻辑删除
+        // 判断数据是否为空  null " "
+        if(StringUtils.isNotEmpty(ids)){
+            // 切割数据
+            String[] split = ids.split(",");
+            for (String id : split) {
+                courierRepository.updateDelTagById(Long.parseLong(id));
+            }
+        }
     }
 
 }

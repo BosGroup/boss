@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -18,17 +19,24 @@ public class Area {
 
     @Id
     @Column(name = "C_ID")
+    @GeneratedValue
     private Long id;
+    
     @Column(name = "C_PROVINCE")
     private String province; // 省
+    
     @Column(name = "C_CITY")
     private String city; // 城市
+    
     @Column(name = "C_DISTRICT")
     private String district; // 区域
+    
     @Column(name = "C_POSTCODE")
     private String postcode; // 邮编
+    
     @Column(name = "C_CITYCODE")
     private String citycode; // 城市编码
+    
     @Column(name = "C_SHORTCODE")
     private String shortcode; // 简码
 

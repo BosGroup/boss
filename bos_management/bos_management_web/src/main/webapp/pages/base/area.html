@@ -105,6 +105,11 @@
 					onDblClickRow : doDblClickRow
 				});
 				
+				// 给导入按钮绑定事件,在区域管理数据表格加载之后
+				$("#button-import").upload({
+					action : "../../areaAction_importXLS.action"
+				})
+				
 				// 添加、修改区域窗口
 				$('#addWindow').window({
 			        title: '添加修改区域',

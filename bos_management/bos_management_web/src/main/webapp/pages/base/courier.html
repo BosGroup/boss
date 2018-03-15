@@ -48,6 +48,10 @@
 			function doRestore(){
 				alert("将取派员还原...");
 			}
+			
+			function openSearchWindow(){
+				$("#searchWindow").window("open")
+			}
 			//工具栏
 			var toolbar = [ {
 				id : 'button-add',	
@@ -69,6 +73,11 @@
 				text : '还原',
 				iconCls : 'icon-save',
 				handler : doRestore
+			},{
+				id : 'button-search',
+				text : '搜索',
+				iconCls : 'icon-search',
+				handler : openSearchWindow
 			}];
 			// 定义列
 			var columns = [ [ {
@@ -189,7 +198,39 @@
 					$("#courierForm").submit();
 				}
 			}
+			
+			
+			//将表单中的数据序列化成json对象的方法
+			$.fn.serializeJson = function() {
+			var serializeObj = {};
+			var array = this.serializeArray();
+			var str = this.serialize();
+			$(array).each(
+					function() {
+						if (serializeObj[this.name]) {
+							if ($.isArray(serializeObj[this.name])) {
+								serializeObj[this.name].push(this.value);
+							} else {
+								serializeObj[this.name] = [
+										serializeObj[this.name], this.value ];
+							}
+						} else {
+							serializeObj[this.name] = this.value;
+						}
+					});
+				return serializeObj;
+			};
+		
+			//执行查询
+			function doSearch() {
+				// 把form表单中input节点的name的值和用户输入的内容,拼接成json字符串
+				var result = $("#searchForm").serializeJson();
+				// 让Datagrid重新发起查询请求,并把用户输入的查询条件传递给后台
+				$('#grid').datagrid('load',result);
+			}
 		</script>
+		
+		
 	</head>
 
 	<body class="easyui-layout" style="visibility:hidden;">
@@ -247,6 +288,7 @@
 							</td>
 							<td>取派标准</td>
 							<td>
+								<!-- 若是关联对象(一对多等),用对象.属性id可以实现自动封装 -->
 								<input type="text" name="standard.id" 
 										class="easyui-combobox" 
 										data-options="required:true,valueField:'id',textField:'name',
@@ -271,6 +313,7 @@
 		<!-- 查询快递员-->
 		<div class="easyui-window" title="查询快递员窗口" closed="true" id="searchWindow" collapsible="false" minimizable="false" maximizable="false" style="width: 400px; top:40px;left:200px">
 			<div style="overflow:auto;padding:5px;" border="false">
+				
 				<form id="searchForm">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
@@ -285,6 +328,7 @@
 						<tr>
 							<td>收派标准</td>
 							<td>
+								<!-- 若是关联对象(一对多等),用对象.属性id可以实现自动封装 -->
 								<input type="text" name="standard.name" />
 							</td>
 						</tr>
@@ -301,7 +345,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2"><a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
+							<td colspan="2"><a onclick="doSearch()" id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
 						</tr>
 					</table>
 				</form>

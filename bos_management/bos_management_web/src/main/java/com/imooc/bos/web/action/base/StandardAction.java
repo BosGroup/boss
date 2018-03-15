@@ -82,7 +82,7 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
         Pageable pageable = new PageRequest(page - 1, rows);
         Page<Standard> page = standardService.findAll(pageable);
         
-        //封装数据
+        //封装数据,Easy需要特定格式的json,要有total和rows两个key,可以用javabean或map封装
         long total = page.getTotalElements();   // 总数据条数
         List<Standard> list = page.getContent();   // 当前页的内容
         Map<String, Object> map = new HashMap<>();

@@ -2,6 +2,7 @@ package com.imooc.bos.service.base;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.imooc.bos.domain.base.Courier;
 
@@ -19,7 +20,7 @@ public interface CourierService {
     void save(Courier model);
 
     /**  
-     * 分页查询快递员信息
+     * 无条件分页查询快递员信息
      * @param pageable
      * @return  
      */
@@ -30,6 +31,12 @@ public interface CourierService {
      * @param ids  
      */
     void batchDel(String ids);
-
+    
+    /**  
+     * 有条件分页查询快递员信息
+     * @param pageable
+     * @return  
+     */
+    Page<Courier> findAll(Specification<Courier> specification, Pageable pageable);
 }
   

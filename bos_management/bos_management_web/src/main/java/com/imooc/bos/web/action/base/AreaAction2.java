@@ -29,7 +29,6 @@ import com.imooc.bos.bosUtils.PinYin4jUtils;
 import com.imooc.bos.domain.base.Area;
 import com.imooc.bos.domain.base.Standard;
 import com.imooc.bos.service.base.AreaService;
-import com.imooc.bos.web.action.CommonAction;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -49,11 +48,12 @@ import net.sf.json.JsonConfig;
 @ParentPackage("struts-default")
 @Scope("prototype")
 @Controller
-public class AreaAction extends CommonAction<Area> {
+public class AreaAction2 extends ActionSupport implements ModelDriven<Area> {
     
-    //通过构造方法传递模型驱动所需的对象类型
-    public AreaAction() {
-        super(Area.class);
+    private Area model;
+    @Override
+    public Area getModel() {
+        return model;
     }
     
     @Autowired
@@ -133,7 +133,17 @@ public class AreaAction extends CommonAction<Area> {
     }
     
     
-    //################### 区域分页查询  #################### 
+    //################### 区域分页查询  ####################
+    //使用属性驱动获取数据
+    private int page;   // 第几页
+    private int rows;   // 每一页显示多少条数据
+    public void setPage(int page) {
+        this.page = page;
+    }
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+    
     // AJAX请求不需要跳转页面
     @Action(value = "areaAction_pageQuery")
     public String pageQuery() throws IOException{
@@ -141,11 +151,23 @@ public class AreaAction extends CommonAction<Area> {
         // EasyUI的页码是从1开始的, SPringDataJPA的页码是从0开始的, 所以要-1
         Pageable pageable = new PageRequest(page - 1, rows);
         Page<Area> page = areaService.findAll(pageable);
-         
+        
+        //封装数据,Easy需要特定格式的json,要有total和rows两个key,可以用javabean或map封装
+        long total = page.getTotalElements();   // 总数据条数
+        List<Area> list = page.getContent();   // 当前页的内容
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", list);
+        
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"subareas"});
         
-        page2json(page, jsonConfig);
+        // 把对象转化为json字符串, JSONObject:封装对象或map集合,JSONArray:数组,list集合
+        String json = JSONObject.fromObject(map, jsonConfig).toString();
+         
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(json);
         
         return NONE;
     }

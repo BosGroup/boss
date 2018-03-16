@@ -2,6 +2,7 @@ package com.imooc.bos.domain.base;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,22 +16,29 @@ import javax.persistence.Table;
 public class SubArea {
 
     @Id
+    @GeneratedValue
     @Column(name = "C_ID")
     private Long id;
+    
     @Column(name = "C_START_NUM")
     private String startNum; // 起始号
+    
     @Column(name = "C_ENDNUM")
     private String endNum; // 终止号
+    
     @Column(name = "C_SINGLE")
     private Character single; // 单双号
+    
     @Column(name = "C_KEY_WORDS")
     private String keyWords; // 关键字
+    
     @Column(name = "C_ASSIST_KEY_WORDS")
     private String assistKeyWords; // 辅助关键字
 
     @ManyToOne
     @JoinColumn(name = "C_AREA_ID")
     private Area area; // 区域
+    
     @ManyToOne
     @JoinColumn(name = "C_FIXEDAREA_ID")
     private FixedArea fixedArea; // 定区

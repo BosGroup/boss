@@ -227,9 +227,10 @@
 						<tr>
 							<td>选择区域</td>
 							<td>
+								<!-- mode定义了当文本改变时如何读取列表数据,remote模式时，用户输入将被发送到名为'q'的HTTP请求参数到服务器检索新数据 -->
 								<input class="easyui-combobox" name="area.id"
-									 data-options="valueField:'id',textField:'name',
-									 url:''" />
+									 data-options="valueField:'id',textField:'name',mode:'remote',
+									 url:'../../areaAction_findAll.action'" />
 							</td>
 						</tr>
 						<tr>

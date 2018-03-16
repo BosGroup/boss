@@ -15,6 +15,7 @@ import com.imooc.bos.domain.base.Standard;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
@@ -74,6 +75,21 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T>{
             json = JSONObject.fromObject(map).toString();
         }
 
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(json);
+    }
+    
+    
+    //################### 将list转换为json并写出到前端  ####################
+    public void list2json(List<T> list, JsonConfig jsonConfig) throws IOException{
+        String json;
+        if(jsonConfig != null){
+            json = JSONArray.fromObject(list, jsonConfig).toString();
+        }else{
+            json = JSONArray.fromObject(list).toString();
+        }
+        
         HttpServletResponse response = ServletActionContext.getResponse();
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(json);

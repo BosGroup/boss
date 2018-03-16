@@ -42,7 +42,14 @@ public class Area {
 
     @OneToMany(mappedBy = "area")
     private Set<SubArea> subareas = new HashSet<SubArea>();
-
+    
+    
+    //json库将对象转化成json的时候不是看对象类的字段,而是根据get方法
+    //多加一个get方法,在返回json数据到前端就会多一个{name:province+city+district}
+    public String getName(){
+        return province+city+district;
+    }
+    
     public Long getId() {
         return id;
     }

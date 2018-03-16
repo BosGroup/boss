@@ -27,6 +27,13 @@ public interface AreaService {
      */
     Page<Area> findAll(Pageable pageable);
 
+    /**  
+     * 根据用户输入进行模糊查询区域
+     * @param q
+     * @return  
+     */
+    List<Area> findByQ(String q);
+
 
 
 }

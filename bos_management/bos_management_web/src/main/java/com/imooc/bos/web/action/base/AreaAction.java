@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -149,6 +150,36 @@ public class AreaAction extends CommonAction<Area> {
         
         return NONE;
     }
+    
+    
+    //################### 查询所有区域 ,并在所有区域下拉框加搜索功能  #################### 
+    //属性驱动获取q值(用户输入的关键字)
+    private String q;
+    public void setQ(String q) {
+        this.q = q;
+    }
+    
+    @Action(value="areaAction_findAll")
+    public String findAll() throws IOException{
+        List<Area> list;
+        if(StringUtils.isNotEmpty(q)){
+            //根据用户输入的条件进行模糊匹配
+            list = areaService.findByQ(q);
+        }else{
+            //查询所有
+            Page<Area> page = areaService.findAll(null);
+            list = page.getContent();
+        }
+        
+        //去掉前端不需要的参数,避免懒加载异常
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"subareas"});
+        
+        list2json(list, jsonConfig);
+        return NONE;
+    }
+    
+    
     
 }
   

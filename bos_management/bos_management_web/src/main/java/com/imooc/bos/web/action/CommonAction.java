@@ -32,18 +32,17 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T>{
     
     public CommonAction(Class<T> clazz) {
         this.clazz = clazz;
+        try {
+             model = clazz.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();  
+        } 
+        
     }
     
     @Override
     public T getModel() {
-        try {
-            //必须判断是否为空,属性驱动获取值时model有值不为null
-            if(model == null){
-                model = clazz.newInstance();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();  
-        }  
+         
         return model;
     }
 

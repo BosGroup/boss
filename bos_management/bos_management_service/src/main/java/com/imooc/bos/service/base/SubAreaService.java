@@ -1,5 +1,8 @@
 package com.imooc.bos.service.base;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.imooc.bos.domain.base.SubArea;
 
 /**  
@@ -14,6 +17,13 @@ public interface SubAreaService {
      * @param model  
      */
     void save(SubArea model);
+
+    /**  
+     * 分页查询分区
+     * @param pageable
+     * @return  
+     */
+    Page<SubArea> findAll(Pageable pageable);
 
 }
   

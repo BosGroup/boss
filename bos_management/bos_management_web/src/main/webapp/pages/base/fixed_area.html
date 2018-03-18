@@ -258,6 +258,15 @@
 				
 			}
 		</script>
+		
+		<script type="text/javascript">
+			//提交保存定区的表单
+			function saveFixedArea() {
+				if($("#fixedAreaForm").form("validate")){
+					$("#fixedAreaForm").submit();
+				}
+			}
+		</script>
 	</head>
 
 	<body class="easyui-layout" style="visibility:hidden;">
@@ -279,12 +288,13 @@
 		<div class="easyui-window" title="定区添加修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 			<div style="height:31px;overflow:hidden;" split="false" border="false">
 				<div class="datagrid-toolbar">
-					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+					<a onclick="saveFixedArea()" id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
 					</script>
 				</div>
 			</div>
 
 			<div style="overflow:auto;padding:5px;" border="false">
+				
 				<form id="fixedAreaForm" method="post" action="../../fixedAreaAction_save.action">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
@@ -398,7 +408,7 @@
 							<td>
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
-								<input data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
+								<input data-options="ditable:false, url:'#',valueField:'id',textField:'name'"
 									 type="text" name="courierId" class="easyui-combobox" required="true" />
 							</td>
 						</tr>

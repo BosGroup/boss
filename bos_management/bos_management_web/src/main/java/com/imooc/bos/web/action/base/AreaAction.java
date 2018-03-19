@@ -174,7 +174,7 @@ public class AreaAction extends CommonAction<Area> {
         //去掉前端不需要的参数,避免懒加载异常
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"subareas"});
-        
+        gyyudgofh,gpjm.;h,k;j;[k,l.k;'[
         list2json(list, jsonConfig);
         return NONE;
     }

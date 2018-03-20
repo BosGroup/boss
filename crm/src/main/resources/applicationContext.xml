@@ -21,7 +21,7 @@
               http://cxf.apache.org/schemas/configuration/soap.xsd
               http://cxf.apache.org/jaxws 
               http://cxf.apache.org/schemas/jaxws.xsd
-                 http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd ">
+                 http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
 	<!--
 		#########################################################
@@ -90,7 +90,7 @@
 
 	<!-- 发布webService,address:请求地址 -->
 	<jaxrs:server address="/customerService">
-		<!-- 注入提供服务的具体对象 -->
+		<!-- 注入提供服务的具体对象,此对象已被spring管理,不需要重新声明 -->
 		<jaxrs:serviceBeans>
 			<ref bean="customerServiceImpl" />
 		</jaxrs:serviceBeans>

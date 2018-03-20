@@ -1,7 +1,13 @@
 package com.imooc.bos.web.action.base;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
+import javax.jws.WebService;
+import javax.ws.rs.core.MediaType;
+
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import com.imooc.bos.domain.base.FixedArea;
 import com.imooc.bos.service.base.FixedAreaService;
 import com.imooc.bos.web.action.CommonAction;
+import com.imooc.crm.domain.Customer;
 
 import net.sf.json.JsonConfig;
 
@@ -49,8 +56,8 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
     }
     
     
-   //################### 分页查询定区  ####################
- // AJAX请求不需要跳转页面
+    //################### 分页查询定区  ####################
+    // AJAX请求不需要跳转页面
     @Action(value = "fixedAreaAction_pageQuery")
     public String pageQuery() throws IOException {
         
@@ -63,6 +70,59 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
 
         page2json(page, jsonConfig);
         return NONE;
+    }
+        
+    
+    //################### 向CRM系统发起请求,查询未关联定区的客户  ####################
+    @Action(value="fixedAreaAction_findUnAssociatedCustomers")
+    public String findUnAssociatedCustomers() throws IOException{
+        
+        List<Customer> list = (List<Customer>) WebClient
+                .create("http://localhost:8180/crm/webService/customerService/findCustomersUnAssociated")
+                .type(MediaType.APPLICATION_JSON)          //默认为xml,若用json需声明
+                .accept(MediaType.APPLICATION_JSON)
+                .getCollection(Customer.class);
+        
+        list2json(list, null);
+        return NONE;
+    }
+    
+    
+    //################### 向CRM系统发起请求,查询已关联指定的定区的客户  ####################
+    @Action(value="fixedAreaAction_findAssociatedCustomers")
+    public String findAssociatedCustomers() throws IOException{
+        
+        List<Customer> list = (List<Customer>) WebClient
+                .create("http://localhost:8180/crm/webService/customerService/findCustomersAssociated2FixedArea")
+                .query("fixedAreaId", getModel().getId())   //获取并传达请求参数
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .getCollection(Customer.class);
+        
+        list2json(list, null);
+        return NONE;
+    }
+    
+    
+    //################### 向CRM系统发起请求,关联客户  ####################
+    //使用属性驱动获取要关联到指定定区的客户ID
+    private Long[] customerIds;
+    public void setCustomerIds(Long[] customerIds) {
+        this.customerIds = customerIds;
+    }
+    
+    @Action(value="fixedAreaAction_assignCustomers2FixedArea",results = {@Result(name = "success",
+            location = "/pages/base/fixed_area.html",type = "redirect")})
+    public String assignCustomers2FixedArea(){
+        
+        WebClient.create("http://localhost:8180/crm/webService/customerService/assignCustomers2FixedArea")
+            .query("fixedAreaId", getModel().getId())
+            .query("customerIds", customerIds)
+            .type(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .put(null);
+        
+        return SUCCESS;
     }
 }
   

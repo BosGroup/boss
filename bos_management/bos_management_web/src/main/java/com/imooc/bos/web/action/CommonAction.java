@@ -84,7 +84,7 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T>{
     
     
     //################### 将list转换为json并写出到前端  ####################
-    public void list2json(List<T> list, JsonConfig jsonConfig) throws IOException{
+    public void list2json(List list, JsonConfig jsonConfig) throws IOException{
         String json;
         if(jsonConfig != null){
             json = JSONArray.fromObject(list, jsonConfig).toString();

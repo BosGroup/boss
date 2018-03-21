@@ -454,6 +454,16 @@
 				$("#associationSelect option").attr("selected","selected")
 				$("#customerForm").submit();
 			}
+			
+			//关联快递员
+			function associateCourier(){
+				if($("#courierForm").form("validate")){
+					//提交之前给定区ID赋值
+					var rows = $("#grid").datagrid("getSelections");
+					$("#courierFixedAreaId").val(rows[0].id) 
+					$("#courierForm").submit();
+				}
+			}
 		</script>
 		
 		<!-- 关联快递员窗口 -->
@@ -471,6 +481,7 @@
 							<td>
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
+								<!-- 快递员 -->
 								<input data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
 									 type="text" name="courierId" class="easyui-combobox" required="true" />
 							</td>
@@ -484,13 +495,14 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-								<a id="associationCourierBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联快递员</a>
+								<a onclick="associateCourier()" id="associationCourierBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联快递员</a>
 							 </td>
 						</tr>
 					</table>
 				</form>
 			</div>
 		</div>
+	
 	</body>
 
 </html>

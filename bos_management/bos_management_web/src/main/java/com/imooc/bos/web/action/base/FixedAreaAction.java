@@ -124,5 +124,24 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
         
         return SUCCESS;
     }
+    
+    
+    //################### 定区关联快递员  ####################
+    //属性驱动获取
+    private Long courierId;
+    private Long takeTimeId;
+    public void setCourierId(Long courierId) {
+        this.courierId = courierId;
+    }
+    public void setTakeTimeId(Long takeTimeId) {
+        this.takeTimeId = takeTimeId;
+    }
+    
+    @Action(value="fixedAreaAction_associationCourierToFixedArea",results = {@Result(name = "success",
+            location = "/pages/base/fixed_area.html",type = "redirect")})
+    public String associationCourierToFixedArea(){
+        fixedAreaService.associationCourierToFixedArea(getModel().getId(),courierId,takeTimeId);
+        return SUCCESS;
+    }
 }
   

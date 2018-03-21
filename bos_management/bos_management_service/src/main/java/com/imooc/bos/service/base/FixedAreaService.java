@@ -25,5 +25,13 @@ public interface FixedAreaService {
      */
     Page<FixedArea> findAll(Pageable pageable);
 
+    /**  
+     * 关联快递员
+     * @param id
+     * @param courierId
+     * @param takeTimeId  
+     */
+    void associationCourierToFixedArea(Long id, Long courierId, Long takeTimeId);
+
 }
   

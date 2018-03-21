@@ -1,5 +1,7 @@
 package com.imooc.bos.service.base;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,6 +26,19 @@ public interface SubAreaService {
      * @return  
      */
     Page<SubArea> findAll(Pageable pageable);
+
+    /**  
+     * 查询未关联到定区的分区
+     * @return  
+     */
+    List<SubArea> findUnAssociatedsubAreas();
+
+    /**  
+     * 查询已关联到指定定区的分区
+     * @param id
+     * @return  
+     */
+    List<SubArea> findAssociatedsubAreas(Long fixedAreaId);
 
 }
   

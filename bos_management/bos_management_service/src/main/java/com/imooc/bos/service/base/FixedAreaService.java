@@ -31,7 +31,14 @@ public interface FixedAreaService {
      * @param courierId
      * @param takeTimeId  
      */
-    void associationCourierToFixedArea(Long id, Long courierId, Long takeTimeId);
+    void associationCourierToFixedArea(Long fixedAreaId, Long courierId, Long takeTimeId);
+
+    /**  
+     * 定区关联分区
+     * @param id
+     * @param subAreaIds  
+     */
+    void assignsubAreas2FixedArea(Long fixedAreaId, Long[] subAreaIds);
 
 }
   

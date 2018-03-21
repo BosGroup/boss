@@ -1,5 +1,7 @@
 package com.imooc.bos.service.base.impl;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.imooc.bos.dao.CourierRepository;
 import com.imooc.bos.dao.FixedAreaRepository;
+import com.imooc.bos.dao.SubAreaRepository;
 import com.imooc.bos.dao.TakeTimeRepository;
 import com.imooc.bos.domain.base.Courier;
 import com.imooc.bos.domain.base.FixedArea;
+import com.imooc.bos.domain.base.SubArea;
 import com.imooc.bos.domain.base.TakeTime;
 import com.imooc.bos.service.base.FixedAreaService;
 
@@ -32,6 +36,9 @@ public class FixedAreaServiceImpl implements FixedAreaService{
     
     @Autowired
     private TakeTimeRepository takeTimeRepository;
+    
+    @Autowired
+    private SubAreaRepository subAreaRepository;
     
     
     @Override
@@ -61,5 +68,25 @@ public class FixedAreaServiceImpl implements FixedAreaService{
         fixedArea.getCouriers().add(courier);
     }
 
+    @Override
+    public void assignsubAreas2FixedArea(Long fixedAreaId, Long[] subAreaIds) {
+        //关联分区到指定的定区,关系是由分区在维护
+        //先解绑，把当前定区绑定的所有分区全部解绑
+        FixedArea fixedArea = fixedAreaRepository.findOne(fixedAreaId);
+        Set<SubArea> subareas = fixedArea.getSubareas();
+        for (SubArea subArea : subareas) {
+            subArea.setFixedArea(null);
+        }
+        
+        //再绑定
+        if(subAreaIds != null){
+            for (Long subAreaId : subAreaIds) {
+                SubArea subArea = subAreaRepository.findOne(subAreaId);
+                subArea.setFixedArea(fixedArea);
+            }
+        }
+    }
+    
+    
 }
   

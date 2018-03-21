@@ -1,6 +1,7 @@
 package com.imooc.bos.web.action.base;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -13,13 +14,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
-import com.imooc.bos.domain.base.Area;
 import com.imooc.bos.domain.base.SubArea;
 import com.imooc.bos.service.base.SubAreaService;
 import com.imooc.bos.web.action.CommonAction;
 
 import net.sf.json.JsonConfig;
-
 /**  
  * ClassName:SubareaAction <br/>  
  * Function:  <br/>  
@@ -64,6 +63,33 @@ public class SubareaAction extends CommonAction<SubArea>{
         
         page2json(page, jsonConfig);
        
+        return NONE;
+    }
+    
+    
+    //################### 查询未关联到定区的分区  ####################
+    //定区和分区的关系由分区维护
+    @Action(value="subAreaAction_findUnAssociatedsubAreas")
+    public String findUnAssociatedsubAreas() throws IOException{
+        
+        List<SubArea> list = subAreaService.findUnAssociatedsubAreas();
+        
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"subareas"});
+        list2json(list, jsonConfig);
+        return NONE;
+    }
+    
+    
+    //################### 查询已关联到指定定区的分区  ####################
+    @Action(value="subAreaAction_findAssociatedsubAreas")
+    public String findAssociatedsubAreas() throws IOException{
+        
+        List<SubArea> list = subAreaService.findAssociatedsubAreas(getModel().getId());
+        
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"subareas","couriers"});
+        list2json(list, jsonConfig);
         return NONE;
     }
 }

@@ -12,6 +12,7 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.xml.resolver.helpers.PublicId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -114,15 +115,24 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
     @Action(value="fixedAreaAction_assignCustomers2FixedArea",results = {@Result(name = "success",
             location = "/pages/base/fixed_area.html",type = "redirect")})
     public String assignCustomers2FixedArea(){
-        
-        WebClient.create("http://localhost:8180/crm/webService/customerService/assignCustomers2FixedArea")
+        if(customerIds != null){
+            WebClient.create("http://localhost:8180/crm/webService/customerService/assignCustomers2FixedArea")
             .query("fixedAreaId", getModel().getId())
             .query("customerIds", customerIds)
             .type(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .put(null);
-        
-        return SUCCESS;
+            
+            return SUCCESS;
+        }else{
+            WebClient.create("http://localhost:8180/crm/webService/customerService/assignCustomers2FixedArea2")
+            .query("fixedAreaId", getModel().getId())
+            .type(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .put(null);
+            
+            return SUCCESS;
+        }
     }
     
     
@@ -141,6 +151,21 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
             location = "/pages/base/fixed_area.html",type = "redirect")})
     public String associationCourierToFixedArea(){
         fixedAreaService.associationCourierToFixedArea(getModel().getId(),courierId,takeTimeId);
+        return SUCCESS;
+    }
+    
+    
+    //################### 定区关联分区  ####################
+    //使用属性驱动获取分区的Id
+    private Long[] subAreaIds;
+    public void setSubAreaIds(Long[] subAreaIds) {
+        this.subAreaIds = subAreaIds;
+    }
+    
+    @Action(value="fixedAreaAction_assignsubAreas2FixedArea",results = {@Result(name = "success",
+            location = "/pages/base/fixed_area.html",type = "redirect")})
+    public String assignsubAreas2FixedArea(){
+        fixedAreaService.assignsubAreas2FixedArea(getModel().getId(),subAreaIds);
         return SUCCESS;
     }
 }

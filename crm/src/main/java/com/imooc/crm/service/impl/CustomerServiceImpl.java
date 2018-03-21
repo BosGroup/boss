@@ -55,5 +55,15 @@ public class CustomerServiceImpl implements CustomerService{
             }
         }
     }
+
+    @Override
+    public void assignCustomers2FixedArea2(String fixedAreaId) {
+          
+        //如果关联到这个定区的客户为空时,根据定区ID,把关联到这个定区的所有客户全部解绑
+        if(StringUtils.isNotEmpty(fixedAreaId)){
+            customerRepository.unbindCustomerByFixedArea(fixedAreaId);
+        }
+        
+    }
 }
   

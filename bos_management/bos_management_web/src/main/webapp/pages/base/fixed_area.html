@@ -113,7 +113,7 @@
 						$("#courierWindow").window('open');
 					}else{
 						// 没有选中定区，或者选择 了多个定区
-						$.messager.alert("警告","关联快递员,只能（必须）选择一个定区","warning");
+						$.messager.alert("警告","您只能且必须选择一个定区","warning");
 					}
 				}
 			},{
@@ -471,19 +471,15 @@
 							<td>
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
-								<input data-options="ditable:false, url:'#',valueField:'id',textField:'name'"
+								<input data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
 									 type="text" name="courierId" class="easyui-combobox" required="true" />
 							</td>
 						</tr>
 						<tr>
 							<td>选择收派时间</td>
 							<td>
-								<select required="true" class="easyui-combobox" name="takeTimeId">
-									<option>请选择</option>
-									<option value="1">北京早班</option>
-									<option value="2">北京晚班</option>
-								</select>
-								<!-- <input type="text" name="takeTimeId" class="easyui-combobox" required="true" /> -->
+							<input data-options="ditable:false, url:'../../takeTimeAction_listajax.action',valueField:'id',textField:'name'"
+							type="text" name="takeTimeId" class="easyui-combobox" required="true" />
 							</td>
 						</tr>
 						<tr>

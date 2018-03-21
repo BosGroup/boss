@@ -1,5 +1,7 @@
 package com.imooc.bos.service.base;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,5 +40,11 @@ public interface CourierService {
      * @return  
      */
     Page<Courier> findAll(Specification<Courier> specification, Pageable pageable);
+
+    /**  
+     * 查询在职快递员
+     * @return  
+     */
+    List<Courier> findAvaible();
 }
   

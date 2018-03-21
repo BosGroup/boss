@@ -69,7 +69,7 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T>{
         map.put("total", total);
         map.put("rows", list);
         
-        //把对象转化为json字符串, JSONObject:封装对象或map集合,JSONArray:数组,list集合
+        //把对象转化为json字符串, JSONObject:封装对象或map集合,JSONArray:数组,list集合,将jsonConfig传进去
         String json;
         if (jsonConfig != null) {
             json = JSONObject.fromObject(map, jsonConfig).toString();

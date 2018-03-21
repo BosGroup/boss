@@ -31,8 +31,6 @@ import org.springframework.stereotype.Controller;
 import com.imooc.bos.domain.base.Courier;
 import com.imooc.bos.domain.base.Standard;
 import com.imooc.bos.service.base.CourierService;
-import com.imooc.bos.web.action.CommonAction;
-import com.imooc.crm.domain.Customer;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -49,11 +47,13 @@ import net.sf.json.JsonConfig;
 @ParentPackage("struts-default")
 @Scope("prototype")
 @Controller
-public class CourierAction extends CommonAction<Courier>{
+public class CourierAction2 extends ActionSupport implements ModelDriven<Courier>{
     
-    //通过构造方法传递模型驱动所需的对象类型
-    public CourierAction() {
-        super(Courier.class);
+    private Courier model = new Courier();
+    @Override
+    public Courier getModel() {
+          
+        return model;
     }
     
     @Autowired
@@ -64,12 +64,21 @@ public class CourierAction extends CommonAction<Courier>{
     @Action(value = "courierAction_save", 
        results = {@Result(name = "success",location="/pages/base/courier.html", type="redirect")})
     public String save(){
-        courierService.save(getModel());
+        courierService.save(model);
         return SUCCESS;
     }
     
     
     //################### 分页查询快递员信息  ####################
+    private int page;
+    private int rows;
+    public void setPage(int page) {
+        this.page = page;
+    }
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
     @Action("courierAction_pageQuery")
     public String pageQuery() throws IOException{
         
@@ -86,10 +95,10 @@ public class CourierAction extends CommonAction<Courier>{
             public Predicate toPredicate(Root<Courier> root, CriteriaQuery<?> query,
                     CriteriaBuilder cb) {
                 //取出已封装到model对象中的查询参数
-                String courierNum = getModel().getCourierNum();  
-                String company = getModel().getCompany();
-                String type = getModel().getType();
-                Standard standard = getModel().getStandard();
+                String courierNum = model.getCourierNum();  
+                String company = model.getCompany();
+                String type = model.getType();
+                Standard standard = model.getStandard();
                 
                 // 存储条件的集合
                 List<Predicate> list = new ArrayList<>();
@@ -144,12 +153,24 @@ public class CourierAction extends CommonAction<Courier>{
         //是否使用带条件的分页查询取决于specification是否为null
         Page<Courier> page = courierService.findAll(specification, pageable);
         
+        //封装数据,Easy需要特定格式的json,要有total和rows两个key,可以用javabean或map封装
+        long total = page.getTotalElements();   // 总数据条数
+        List<Courier> list = page.getContent();   // 当前页的内容
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", list);
+        
         // 在实际开发的时候,为了提高服务器的性能,把前台页面不需要的数据都应该忽略掉
         // 灵活控制输出的内容
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[]{"fixedAreas", "takeTime"});
 
-        page2json(page, jsonConfig);
+        // 把对象转化为json字符串, JSONObject:封装对象或map集合,JSONArray:数组,list集合,将jsonConfig传进去
+        String json = JSONObject.fromObject(map, jsonConfig).toString();
+        
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(json);
         
         return NONE;
     }
@@ -168,47 +189,6 @@ public class CourierAction extends CommonAction<Courier>{
         courierService.batchDel(ids);
         return SUCCESS;
     }
-    
-    
-    //################### 查询所有在职的快递员  ####################
-    // 方法一
-    @Action("courierAction_listajax")
-    public String listajax() throws IOException{
-        List<Courier> list = courierService.findAvaible();
-        
-        JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"fixedAreas","takeTime"});
-        
-        list2json(list, jsonConfig);
-        
-        return NONE;
-    }
-    
-    // 方法二
-    @Action("courierAction_listajax2")
-    public String listajax2() throws IOException{
-        //创建一个查询的where语句
-        Specification<Courier> specification = new Specification<Courier>() {
-            @Override
-            public Predicate toPredicate(Root<Courier> root, CriteriaQuery<?> query,
-                    CriteriaBuilder cb) {
-                //比较空值
-                //Predicate predicate = cb.equal(root.get("deltag").as(Character.class), null);//错误的写法
-                Predicate predicate = cb.isNull(root.get("deltag").as(Character.class));
-                return predicate;
-            }
-        };
-        Page<Courier> p = courierService.findAll(specification,null);
-        List<Courier> list = p.getContent();
-        
-        JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"fixedAreas","takeTime"});
-        
-        list2json(list, jsonConfig);
-        
-        return NONE;
-    }
-    
     
 }
   

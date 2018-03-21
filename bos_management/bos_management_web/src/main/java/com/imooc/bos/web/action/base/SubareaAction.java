@@ -28,8 +28,8 @@ import net.sf.json.JsonConfig;
 
 @Namespace("/") // 等价于struts.xml文件中package节点namespace属性
 @ParentPackage("struts-default") // 等价于struts.xml文件中package节点extends属性
-@Controller // spring 的注解,控制层代码
 @Scope("prototype") // spring 的注解,多例
+@Controller // spring 的注解,控制层代码
 public class SubareaAction extends CommonAction<SubArea>{
     
     //通过构造方法传递模型驱动所需的对象类型

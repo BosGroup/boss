@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ctc.wstx.util.StringUtil;
+import com.imooc.bos.bosUtils.Md5Util;
 import com.imooc.crm.dao.CustomerRepository;
 import com.imooc.crm.domain.Customer;
 import com.imooc.crm.service.CustomerService;
@@ -64,6 +65,14 @@ public class CustomerServiceImpl implements CustomerService{
             customerRepository.unbindCustomerByFixedArea(fixedAreaId);
         }
         
+    }
+
+    @Override
+    public void save(Customer customer) {
+        //对密码采用MD5加密后再保存
+        String pwd = Md5Util.encodePwd(customer.getPassword());
+        customer.setPassword(pwd);
+        customerRepository.save(customer);
     }
 }
   

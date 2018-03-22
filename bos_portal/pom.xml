@@ -7,4 +7,11 @@
   </parent>
   <artifactId>bos_portal</artifactId>
   <packaging>war</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.imooc</groupId>
+  		<artifactId>bosUtils</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>

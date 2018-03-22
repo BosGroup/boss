@@ -1,12 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.imooc</groupId>
-  <artifactId>common_parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <description>统一管理依赖</description>
-  
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.imooc</groupId>
+	<artifactId>common_parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<description>统一管理依赖</description>
+
+	<properties>
 		<spring.version>4.2.4.RELEASE</spring.version>
 		<struts2.version>2.3.24</struts2.version>
 		<hibernate.version>5.0.7.Final</hibernate.version>
@@ -319,23 +320,37 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- 阿里短信服务 -->
+		<dependency>
+				<groupId>com.aliyun</groupId>
+				<artifactId>aliyun-java-sdk-core</artifactId>
+				<version>3.3.1</version>
+		</dependency>
+		<dependency>
+				<groupId>com.aliyun</groupId>
+				<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+				<version>1.0.0</version>
+		</dependency>
+		
 	</dependencies>
-	
+
+
 	<build>
-	<pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-					<encoding>UTF-8</encoding>
-					<showWarnings>true</showWarnings>
-				</configuration>
-			</plugin>
-		</plugins>
-	</pluginManagement>
-</build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.2</version>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+						<encoding>UTF-8</encoding>
+						<showWarnings>true</showWarnings>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

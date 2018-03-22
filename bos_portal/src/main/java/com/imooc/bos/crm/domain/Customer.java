@@ -32,7 +32,7 @@ public class Customer {
     private String password; // 密码
     
     @Column(name = "C_TYPE")
-    private Integer type; // 类型
+    private Integer type; // 类型 1表示已激活
     
     @Column(name = "C_BRITHDAY")
     @Temporal(TemporalType.DATE)

@@ -74,5 +74,10 @@ public class CustomerServiceImpl implements CustomerService{
         customer.setPassword(pwd);
         customerRepository.save(customer);
     }
+
+    @Override
+    public void active(String telephone) {
+        customerRepository.active(telephone);
+    }
 }
   

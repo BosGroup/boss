@@ -38,6 +38,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>{
     @Modifying
     @Query("update Customer set type = 1 where telephone =?")
     void active(String telephone);
+    
+    //判断用户是否激活
+    Customer findByTelephone(String telephone);
+    
+    //用户登录
+    Customer findByTelephoneAndPassword(String telephone, String password);
 
 }
   

@@ -80,5 +80,22 @@ public interface CustomerService {
     @PUT
     @Path("/active")
     void active(@QueryParam("telephone") String telephone);
+    
+    
+    /**
+     * 检查用户是否激活
+     */
+    @GET
+    @Path("/isActived")
+    Customer isActived(@QueryParam("telephone") String telephone);
+    
+    
+    /**
+     * 登录
+     */
+    @GET
+    @Path("/login")
+    Customer login(@QueryParam("telephone") String telephone,@QueryParam("password") String password);
+   
 }
   

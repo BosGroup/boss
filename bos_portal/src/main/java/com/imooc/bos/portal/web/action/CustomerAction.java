@@ -76,9 +76,9 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
                 && serverCode.equals(checkcode)){
             //注册
             WebClient.create("http://localhost:8180/crm/webService/customerService/save")
-            .type(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .post(model);
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(model);
             
             //生成激活码
             String activeCode = RandomStringUtils.randomNumeric(32);
@@ -115,15 +115,58 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
                 && serverCode.equals(activeCode)){
             //激活
             WebClient.create("http://localhost:8180/crm/webService/customerService/active")
-            .type(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .query("telephone", model.getTelephone())
-            .put(null);
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .query("telephone", model.getTelephone())
+                .put(null);
             
             return SUCCESS;
         }
         return ERROR;
     }
     
+    
+    //################## 用户登录 #########################
+    @Action(value="customerAction_login",results = {@Result(name = "success", location = "/index.html",type = "redirect"),
+            @Result(name = "error", location = "/login.html",type = "redirect"),
+            @Result(name = "unactived", location = "/login.html",type = "redirect")})
+    public String login(){
+        //获取登录校验码
+        String serverCode = (String) ServletActionContext.getRequest().getSession().getAttribute("validateCode");
+        //验证校验码checkcode已被属性驱动获取
+        if(StringUtils.isNotEmpty(serverCode) && StringUtils.isNotEmpty(checkcode)
+                && serverCode.equals(checkcode)){
+            //校验用户是否激活
+            Customer customer = WebClient.create("http://localhost:8180/crm/webService/customerService/isActived")
+            .type(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .query("telephone", model.getTelephone())  //参数
+            .get(Customer.class);     //返回值
+            
+            //空指针异常customer.getType()的返回值为Integer类型,为对象类型,注意区别int和Integer
+            if(customer != null && customer.getType() != null){
+                if(customer.getType() == 1){
+                    // 激活了,登录
+                    Customer c = WebClient.create("http://localhost:8180/crm/webService/customerService/login")
+                            .type(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .query("telephone", model.getTelephone())
+                            .query("password", model.getPassword())
+                            .get(Customer.class);
+                    if(c != null){
+                        //将用户存储到域对象
+                        ServletActionContext.getRequest().getSession().setAttribute("user", c);
+                        return SUCCESS;
+                    }else{
+                        return ERROR;
+                    }
+                }else{
+                    //用户已经注册成功，但是没有激活    重新发送邮件激活???
+                    return "unactived";
+                }
+            }
+        }
+        return ERROR;
+    }
 }
   

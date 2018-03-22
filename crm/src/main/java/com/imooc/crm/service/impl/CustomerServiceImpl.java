@@ -79,5 +79,17 @@ public class CustomerServiceImpl implements CustomerService{
     public void active(String telephone) {
         customerRepository.active(telephone);
     }
+
+    @Override
+    public Customer isActived(String telephone) {
+        return customerRepository.findByTelephone(telephone);
+    }
+
+    @Override
+    public Customer login(String telephone, String password) {
+        //登录时,对密码进行加密,校验两次加密后的值是否相同
+        String pwd = Md5Util.encodePwd(password);
+        return customerRepository.findByTelephoneAndPassword(telephone,pwd);
+    }
 }
   

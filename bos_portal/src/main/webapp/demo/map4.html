@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>下单页面</title>
+
+<script type="text/javascript" src="../plugins/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../js/citypicker/css/city-picker.css">
+<script type="text/javascript" src="../js/citypicker/js/city-picker.data.js"></script>
+<script type="text/javascript" src="../js/citypicker/js/city-picker.js"></script>
+
+<script type="text/javascript"
+	src="http://api.map.baidu.com/api?v=2.0&ak=WQnhooK8lxS594bI9bdNW9gCL2yA2gyM">
+	
+</script>
+<script type="text/javascript">
+	$(function() {
+		$('#target').citypicker();
+	})
+
+	function clearContent() {
+		$('#target').citypicker("reset");
+	}
+</script>
+</head>
+
+<body>
+
+
+	<div style="position: relative;">
+		<input id="target" style="width: 200px">
+		<input type="button" value="清空" onclick="clearContent()">
+	</div>
+
+
+
+	<!-- 地理位置搜索提示 -->
+	<div>
+		<input name="sendAddress" id="sendAddress" type="text"
+			class="form-control" placeholder="街道详细（精确到门牌号） " required="required">
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			var ac = new BMap.Autocomplete({
+				input : "sendAddress"
+			});
+		});
+	</script>
+	
+</html>

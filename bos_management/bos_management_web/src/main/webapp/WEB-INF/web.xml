@@ -12,7 +12,18 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
-
+	
+	<!-- 配置CXF的Servlet -->
+   	<servlet>
+   	 <servlet-name>cxf</servlet-name>
+   	 <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+   	</servlet>
+   	<!--指定Servlet的访问路径,如果struts拦截的规则是/*，一定要做修改，否则两个框架会起冲突 -->
+   	<servlet-mapping>
+   	 <servlet-name>cxf</servlet-name>
+   	 <url-pattern>/webService/*</url-pattern>
+   	</servlet-mapping>
+	
 	<!-- 配置Spring框架的监听器 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

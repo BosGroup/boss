@@ -18,7 +18,7 @@
 		<script src="js/city-choose.js" type="text/javascript"></script>
 		<script src="js/nav.js" type="text/javascript"></script>
 		<script type="text/javascript" 
-			src="http://api.map.baidu.com/api?v=2.0&ak=4IU3oIAMpZhfWZsMu7xzqBBAf6vMHcoa">
+			src="http://api.map.baidu.com/api?v=2.0&ak=WQnhooK8lxS594bI9bdNW9gCL2yA2gyM">
 		</script>
 	</head>
 	<body>
@@ -135,12 +135,15 @@
 																<div id="distpicker">
 																	<div class="form-group">
 																	<br>
+																		<!-- 使用citypicker实现省市区三级联动 -->
 																		<div class="innercity">
 																			<input name="sendAreaInfo" id="city-picker-1" class="form-control" readonly type="text" value="" data-toggle="city-picker">
 																		</div>
 																		<button class="btn btn-warning" id="resetBtn" type="button" style="float: right;padding: 8px;">重置</button>
+																		
 																		<script type="text/javascript">
 																			$(function(){
+																				<!--重置-->
 																				$("#resetBtn").click(function(){
 																					$("#city-picker-1").citypicker("reset");
 																				});
@@ -154,6 +157,7 @@
 												<div class="form-group">
 													<label for="inputPassword" class="col-sm-3 control-label"><b>*</b>详细地址：</label>
 													<div class="col-sm-8">
+														<!-- 实现地理位置搜索提示 -->
 														<input name="sendAddress" id="sendAddress" type="text" class="form-control" 
 																placeholder="街道详细（精确到门牌号） " required="required">
 														<script type="text/javascript">

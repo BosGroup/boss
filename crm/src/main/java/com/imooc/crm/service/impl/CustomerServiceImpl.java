@@ -91,5 +91,10 @@ public class CustomerServiceImpl implements CustomerService{
         String pwd = Md5Util.encodePwd(password);
         return customerRepository.findByTelephoneAndPassword(telephone,pwd);
     }
+
+    @Override
+    public String findFixedAreaIdByAdddress(String address) {
+        return customerRepository.findFixedAreaIdByAdddress(address);
+    }
 }
   

@@ -23,6 +23,7 @@
 				}
 				if(editIndex==undefined){
 					//alert("快速添加电子单...");
+					//增加一行
 					$("#grid").datagrid('insertRow',{
 						index : 0,
 						row : {}
@@ -150,9 +151,17 @@
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow,
+					//编辑完成后调用的函数
 					onAfterEdit : function(rowIndex, rowData, changes){
-						console.info(rowData);
-						editIndex = undefined;
+						//rowIndex修改的行号
+						//rowData修改之后,所有的列组成的json字符串
+						//changes修改之后,发生改变的列组成的json字符串
+						//请求后台保存运单的数据
+						$.post("../../waybillAction_save.action",rowData,function(data){
+							if(data == "1"){
+								$.messager.alert("提示", "数据录入失败,请检查数据","warning")
+							}
+						})
 					}
 				});
 			});

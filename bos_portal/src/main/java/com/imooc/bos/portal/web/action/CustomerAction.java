@@ -2,6 +2,10 @@ package com.imooc.bos.portal.web.action;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -12,6 +16,8 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.imooc.bos.bosUtils.MailUtils;
@@ -36,20 +42,35 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
     
     
     //################## 注册页面发送验证码 #########################
+    @Autowired
+    private JmsTemplate jmsTemplate;
+    
     @Action(value="customerAction_sendSMS")
     public String sendSMS(){
         //随机生成验证码
-        String code = RandomStringUtils.randomNumeric(6);
+        final String code = RandomStringUtils.randomNumeric(6);
         System.out.println(code);
         //储存验证码
         ServletActionContext.getRequest().getSession().setAttribute("serverCode", code);
         //发送验证码
-        try {
+        /*try {
             //取出模型驱动封装前端传递的手机号
             SmsUtils.sendSms(model.getTelephone(), code);
         } catch (ClientException e) {
             e.printStackTrace();  
-        }
+        }*/
+        
+        //将发送验证码交给消息队列完成,节省用户访问的时间
+        jmsTemplate.send("sms", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                MapMessage message = session.createMapMessage();
+                message.setString("tel", model.getTelephone());
+                message.setString("code", code);
+                return message;
+            }
+        });
+        
         return NONE;
     }
     
@@ -89,7 +110,7 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
             String emailBody = "感谢您注册本网站的账号,请在24小时之内点击<a href='http://localhost:8280/bos_portal/customerAction_active.action?activeCode="
                     +activeCode+"&telephone=" + model.getTelephone()+ "'>激活链接</a>激活您的帐号";
             
-            //根据用户填写的邮箱地址发送激活邮件
+            //根据用户填写的邮箱地址发送激活邮件,此处也可以用消息队列完成,节省访问时间
             MailUtils.sendMail("激活邮件",emailBody,model.getEmail());
             
             return SUCCESS;

@@ -98,4 +98,47 @@
 			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"></bean>
 		</jaxrs:outInterceptors>
 	</jaxrs:server>
+	
+	
+	<!-- 注册安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 注入realm -->
+		<!-- <property name="realm" ref="userRealm"></property> -->
+	</bean>
+	
+	<!-- 初始化shiro框架提供的过滤器 -->
+	<bean id="shiroFilterFactoryBean" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 
+			securityManager:注入安全管理器
+			loginUrl:权限认证的页面,登录页面
+			successUrl:权限认证成功以后要跳转的页面
+			unauthorizedUrl:权限不足要跳转的页面,只对拦截器生效,不会对注解方式生效
+			filterChainDefinitions:指定拦截的规则
+		 -->
+		<property name="securityManager" ref="securityManager"></property>
+		<property name="loginUrl" value="/login.html"></property>
+		<property name="successUrl" value="/index.html"></property>
+		<property name="unauthorizedUrl" value="/unauthorizedUrl.html"></property>
+		<property name="filterChainDefinitions">
+			<!-- 
+				anon:框架提供的过滤器,可以匿名访问,不需要权限
+				authc:框架提供的过滤器,有权限就放行,没有权限就拦截
+				perms:框架提供的过滤器,用户请求资源的时候,会去检查用户是否拥有对应的权限,如果有就放行,
+					     没有,跳转到unauthorizedUrl属性指定的页面(注解方式直接报错)
+				拦截的规则执行的时候是从上往下执行的,一个文件一旦有一个规则匹配成功,后面的规则就不再执行了,所有要注意拦截顺序
+				注意:拦截的规则不可以折行,一个规则只能写在一行
+				xx/**:当前文件夹及此文件下的所有子文件夹和文件
+				validatecode.jsp*:请求路径后加*表示包含路径后拼接数据的情况
+			 -->
+			<value>
+				/css/* = anon
+				/data/* = anon
+				/images/* = anon
+				/js/** = anon
+				/validatecode.jsp* = anon
+				
+				/** = authc
+			</value>
+		</property>
+	</bean>
 </beans>

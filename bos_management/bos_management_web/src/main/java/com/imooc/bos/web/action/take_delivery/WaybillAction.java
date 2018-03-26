@@ -42,7 +42,7 @@ public class WaybillAction extends CommonAction<WayBill> {
     public String save() throws IOException {
         String msg = "0";
         try {
-            int i =10/0;
+            //int i =10/0;
             
             waybillService.save(getModel());
         } catch (Exception e) {

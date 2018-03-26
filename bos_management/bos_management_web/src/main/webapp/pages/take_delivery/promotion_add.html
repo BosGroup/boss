@@ -11,14 +11,27 @@
 		<link rel="stylesheet" type="text/css" href="../../css/default.css">
 		<script type="text/javascript" src="../../js/easyui/jquery.easyui.min.js"></script>
 		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
-	
+		<!-- 引入kindeditor类库 -->
+		<script charset="utf-8" src="../../js/kindeditor/kindeditor-all.js"></script>
+		<script charset="utf-8" src="../../js/kindeditor/lang/zh-CN.js"></script>
+		
 		<script type="text/javascript">
 			$(function(){
 				$("body").css({visibility:"visible"});
 				$("#back").click(function(){
 					location.href = "promotion.html";
 				});
+				
+				
+				//初始化kindeditor控件
+				KindEditor.ready(function(K) {
+	                window.editor = K.create('#description',{
+	                	//指定处理图片上传的Action的路径
+	                    uploadJson : '../../imageAction_upload.action',   
+	            	});
+	       		});
 			});
+			
 		</script>
 	</head>
 	<body class="easyui-layout" style="visibility:hidden;">
@@ -63,7 +76,7 @@
 					<tr>
 						<td>宣传内容(活动描述信息):</td>
 						<td colspan="3">
-							<textarea name="description" style="width:80%" rows="20"></textarea>
+							<textarea id="description" name="description" style="width:80%" rows="20"></textarea>
 						</td>
 					</tr>
 				</table>

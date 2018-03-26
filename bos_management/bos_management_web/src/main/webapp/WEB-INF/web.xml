@@ -39,6 +39,11 @@
 	<filter>
 		<filter-name>struts</filter-name>
 		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+		<!-- 修改文件上传的大小限制问题 -->
+		<init-param>
+			<param-name>struts.multipart.maxSize</param-name>
+			<param-value>60971520</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>struts</filter-name>

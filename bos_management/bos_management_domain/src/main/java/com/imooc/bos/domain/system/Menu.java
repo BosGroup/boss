@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -39,14 +40,26 @@ public class Menu {
     @ManyToMany(mappedBy = "menus")
     private Set<Role> roles = new HashSet<Role>(0);
     
-    //自关联:自己和自己有关系,此处代表一个菜单有多个子菜单
-    @OneToMany(mappedBy = "parentMenu")
+    //自关联:自己和自己有关系,此处代表一个菜单有多个子菜单,fetch立即查询数据避免懒加载
+    @OneToMany(mappedBy = "parentMenu",fetch = FetchType.EAGER)
     private Set<Menu> childrenMenus = new HashSet<Menu>();
 
     @ManyToOne
     @JoinColumn(name = "C_PID")
     private Menu parentMenu;
-
+    
+    
+    //新增get方法,返回json数据时提供combotree需要的text和children字段
+    //父节点会查询childrenMenus,所有只需查询一级菜单,就可以查询到所有的菜单
+    public String getText() {
+        return name;
+    }
+    public Set<Menu> getChildren(){
+        //此处返回的childMenus是集合属性,会发生懒加载异常,需在childrenMenus增加属性,把需要的数据立即查询出来
+        return childrenMenus;
+    }
+    
+    
     public Long getId() {
         return id;
     }

@@ -75,8 +75,26 @@
 	-->
 	<context:component-scan base-package="com.imooc.bos.service,com.imooc.bos.web" />
 
-	<!-- 开启事务注解 -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 
+		开启事务注解:
+		JDK方式:根据目标对象所实现的接口,创建了一个代理对象
+		CGLib代理方式 : 创建一个目标对象的子类,不需要目标对象实现接口
+		proxy-target-class:true,使用cglib代理;false,使用jdk代理;默认为false
+		使用shiro的注解权限方式需开启cglib代理
+	-->
+	<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
+	<!-- 基于Spring的自动代理,创建Service层的实现 -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+		<!-- 开启cglib代理 -->
+		<property name="proxyTargetClass" value="true"></property>
+	</bean>
+	<!-- 配置切面= 切点(向那里插入代码)+通知 (要插入的代码) -->
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<!-- 注入安全管理器 -->
+		<property name="securityManager" ref="securityManager"></property>
+	</bean>
+	
 	<!--
 		#########################################################
 		指定Spring Data JPA要进行扫描的包,该包中的类框架会自动为其创建代理
@@ -121,14 +139,16 @@
 		<property name="unauthorizedUrl" value="/unauthorizedUrl.html"></property>
 		<property name="filterChainDefinitions">
 			<!-- 
+				权限控制方式一:利用shiro提供的过滤器
 				anon:框架提供的过滤器,可以匿名访问,不需要权限
 				authc:框架提供的过滤器,有权限就放行,没有权限就拦截
 				perms:框架提供的过滤器,用户请求资源的时候,会去检查用户是否拥有对应的权限,如果有就放行,
-					     没有,跳转到unauthorizedUrl属性指定的页面(注解方式直接报错)
+					     没有,跳转到unauthorizedUrl属性指定的页面(注解方式直接报错,ajax不会跳页面)
 				拦截的规则执行的时候是从上往下执行的,一个文件一旦有一个规则匹配成功,后面的规则就不再执行了,所有要注意拦截顺序
 				注意:拦截的规则不可以折行,一个规则只能写在一行
 				xx/**:当前文件夹及此文件下的所有子文件夹和文件
 				validatecode.jsp*:请求路径后加*表示包含路径后拼接数据的情况
+				perms[""]:括号内为权限的名字,在授权的方法中定义
 			 -->
 			<value>
 				/css/* = anon
@@ -137,6 +157,8 @@
 				/js/** = anon
 				/validatecode.jsp* = anon
 				/userAction_login.action = anon
+				/courierAction_pageQuery.action = perms["courierAction_pageQuery"]
+				/hi.html = perms["courierAction_pageQuery"]
 				/** = authc
 			</value>
 		</property>

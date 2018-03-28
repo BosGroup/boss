@@ -3,6 +3,7 @@ package com.imooc.bos.service.base.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,12 @@ public class CourierServiceImpl implements CourierService {
     public Page<Courier> findAll(Pageable pageable) {
         return courierRepository.findAll(pageable);
     }
-
+    
+    /**
+     * 权限控制的方式二:使用注解,在调用方法时,框架就会检查当前用户是否有对应的权限,如果有就放行,没有就抛异常
+     * 使用注解方式进行权限控制,必须开启cglib代理,可以在applicationContext.xml中配置
+     */
+    @RequiresPermissions("batchDel")
     @Override
     public void batchDel(String ids) {
         // 真实开发中只有逻辑删除

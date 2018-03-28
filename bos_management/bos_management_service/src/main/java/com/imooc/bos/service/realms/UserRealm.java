@@ -30,14 +30,17 @@ public class UserRealm extends AuthorizingRealm{
     /**
      * 授权的方法
      * 每一次访问需要权限的资源的时候,都会调用授权的方法
+     * 缺点:影响访问速度,可以用缓存解决,将权限和角色存入缓存,访问需要权限的资源的时候不会再次调用授权的方法
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
          
-        //SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        //授权
-        //info.addStringPermission();
-        return null;
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        //授权,
+        info.addStringPermission("courierAction_pageQuery");
+        //授予角色
+        info.addRole("admin");
+        return info;
     }
     
     /**

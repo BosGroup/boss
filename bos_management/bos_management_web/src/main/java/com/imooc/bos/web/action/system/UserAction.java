@@ -39,7 +39,7 @@ public class UserAction extends CommonAction<User>{
     }
     
     
-    //#################### 用户登录 #######################
+    //####################### 用户登录 #########################
     //属性驱动获取用户输入的验证码
     private String checkcode;
     public void setCheckcode(String checkcode) {
@@ -59,6 +59,10 @@ public class UserAction extends CommonAction<User>{
             
             //主体,代表当前用户
             Subject subject = SecurityUtils.getSubject();
+            
+            //shiro权限控制方式四:使用代码校验权限,不推荐使用
+            //subject.checkPermission("");
+            
             //创建用户名密码令牌
             AuthenticationToken token = new UsernamePasswordToken(
                     getModel().getUsername(),getModel().getPassword());
@@ -88,7 +92,16 @@ public class UserAction extends CommonAction<User>{
     }
     
     
-    
+    //####################### 退出登录 #########################
+    @Action(value="userAction_logout",results = {@Result(name = "success",
+            location = "/login.html", type = "redirect")})
+    public String logout(){
+        //获得用户
+        Subject subject = SecurityUtils.getSubject();
+        //退出登录
+        subject.logout();
+        return SUCCESS;
+    }
     
     
     

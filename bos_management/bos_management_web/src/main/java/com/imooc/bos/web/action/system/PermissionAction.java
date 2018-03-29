@@ -1,6 +1,7 @@
 package com.imooc.bos.web.action.system;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -64,6 +65,22 @@ public class PermissionAction extends CommonAction<Permission>{
         permissionService.save(getModel());
         return SUCCESS;
     }
-
+    
+    
+    //#################### 查询所有权限 #######################
+    @Action(value="permissionAction_findAll")
+    public String findAll() throws IOException{
+        
+        //findAll(pageable)查询当前页,fundAll(null)查询所有
+        Page<Permission> page = permissionService.findAll(null);
+        List<Permission> list = page.getContent();
+        
+        //增加忽略属性
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"roles"});
+        list2json(list, jsonConfig);
+        
+        return NONE;
+    }
 }
   

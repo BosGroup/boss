@@ -1,6 +1,7 @@
 package com.imooc.bos.web.action.system;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -74,6 +75,22 @@ public class RoleAction extends CommonAction<Role> {
         
         roleService.save(getModel(),menuIds,permissionIds);
         return SUCCESS;
+    }
+    
+    
+    //#################### 查询所有角色 #######################
+    @Action(value="roleAction_findAll")
+    public String findAll() throws IOException{
+        
+        Page<Role> page = roleService.findAll(null);
+        List<Role> list = page.getContent();
+        //增加忽略属性
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"users","permissions","menus"});
+        
+        list2json(list, jsonConfig);
+        return NONE;
+        
     }
 }
   

@@ -1,9 +1,10 @@
 package com.imooc.bos.web.action.system;
 
 
+import java.io.IOException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -14,12 +15,18 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+
 import com.imooc.bos.domain.system.User;
+import com.imooc.bos.service.system.UserService;
 import com.imooc.bos.web.action.CommonAction;
 
-import freemarker.template.utility.SecurityUtilities;
+import net.sf.json.JsonConfig;
 
 
 /**  
@@ -104,8 +111,37 @@ public class UserAction extends CommonAction<User>{
     }
     
     
+    //####################### 保存用户  #########################
+    //使用属性驱动获取角色的ID
+    private Long[] roleIds;
+    public void setRoleIds(Long[] roleIds) {
+        this.roleIds = roleIds;
+    }
+
+    @Autowired
+    private UserService userService;
+
+    @Action(value = "userAction_save", results = {@Result(name = "success",
+            location = "/pages/system/userlist.html", type = "redirect")})
+    public String save() {
+        userService.save(getModel(), roleIds);
+        return SUCCESS;
+    }
     
     
-    
+    //####################### 分页查询用户  #########################
+    @Action(value="userAction_pageQuery")
+    public String pageQuery() throws IOException{
+        
+        //EasyUI的页码是从1开始的,SPringDataJPA的页码是从0开始的,所以要-1
+        Pageable pageable = new PageRequest(page - 1, rows);
+        Page<User> page = userService.findAll(pageable);
+        
+        //增加忽略属性
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"roles"});
+        page2json(page, jsonConfig);
+        return NONE;
+    }
 }
   

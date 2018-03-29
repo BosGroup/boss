@@ -62,6 +62,7 @@ public class RoleServiceImpl implements RoleService {
         }*/
         
         //保存角色方法二:使用脱管态对象,此种方法效率更高
+        //保存角色实际上是向角色表中插入一条数据,向两个中间表中插入若干条数据,中间表都是id,无其他字段
         if (StringUtils.isNotEmpty(menuIds)) {
             String[] split = menuIds.split(",");
             for (String menuId : split) {

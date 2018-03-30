@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.imooc.bos.dao.system.MenuRepository;
 import com.imooc.bos.domain.system.Menu;
+import com.imooc.bos.domain.system.User;
 import com.imooc.bos.service.system.MenuService;
 
 /**  
@@ -43,6 +44,15 @@ public class MenuServiceImpl implements MenuService{
     @Override
     public Page<Menu> findAll(Pageable pageable) {
         return menuRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Menu> findbyUser(User user) {
+        //如果是管理员用户,则查询所有
+        if("admin".equals(user.getUsername())){
+           return menuRepository.findAll();
+        }
+        return menuRepository.findbyUser(user.getId());
     }
 
 }

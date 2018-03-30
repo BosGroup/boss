@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.imooc.bos.domain.system.Menu;
+import com.imooc.bos.domain.system.User;
 
 /**  
  * ClassName:MenuService <br/>  
@@ -30,6 +31,13 @@ public interface MenuService {
      * 分页查询菜单
      */
     Page<Menu> findAll(Pageable pageable);
+
+    /**  
+     * 根据用户查询菜单
+     * @param id
+     * @return  
+     */
+    List<Menu> findbyUser(User user);
 
 }
   

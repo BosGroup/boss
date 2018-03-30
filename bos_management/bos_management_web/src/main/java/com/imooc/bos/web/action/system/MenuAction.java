@@ -3,6 +3,8 @@ package com.imooc.bos.web.action.system;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
 import com.imooc.bos.domain.system.Menu;
+import com.imooc.bos.domain.system.User;
 import com.imooc.bos.service.system.MenuService;
 import com.imooc.bos.web.action.CommonAction;
 
@@ -74,6 +77,25 @@ public class MenuAction extends CommonAction<Menu>{
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"roles", "childrenMenus", "parentMenu"});
         page2json(page, jsonConfig);
+        
+        return NONE;
+    }
+    
+    //###################### 根据用户查询菜单 ################################
+    @Action(value="menuAction_findbyUser")
+    public String findbyUser() throws IOException{
+        //获取当前用户
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        
+        List<Menu> list = menuService.findbyUser(user);
+        
+        
+        //增加忽略的属性,忽略roles,childrenMenus是避免懒加载异常,忽略parentMenu是避免死循环
+        //忽略children属性是放弃构造标准json的ztree,而使用简单json的ztree,避免数据重复
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"roles", "childrenMenus", "parentMenu","children"});
+        list2json(list, jsonConfig);
         
         return NONE;
     }

@@ -50,7 +50,7 @@ public class Menu implements Serializable{
     private Menu parentMenu;
     
     
-    //新增get方法,返回json数据时提供combotree需要的text和children字段
+    //新增get方法,返回标准json数据时提供combotree需要的text和children字段
     //父节点会查询childrenMenus,所有只需查询一级菜单,就可以查询到所有的菜单
     public String getText() {
         return name;
@@ -58,6 +58,14 @@ public class Menu implements Serializable{
     public Set<Menu> getChildren(){
         //此处返回的childMenus是集合属性,会发生懒加载异常,需在childrenMenus增加属性,把需要的数据立即查询出来
         return childrenMenus;
+    }
+    
+    //新增get方法,返回简单json数据时需提供的pId字段
+    public Long getpId(){
+        if(parentMenu == null){
+            return 0L;
+        }
+        return parentMenu.getId();
     }
     
     

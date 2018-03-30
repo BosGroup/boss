@@ -102,7 +102,11 @@
 	-->
 	<jpa:repositories base-package="com.imooc.bos.dao" />
 	
-	<!-- 发布订单的WebService -->
+	<!--
+		#########################################################
+		发布订单的WebService服务
+		#########################################################
+	-->
 	<jaxrs:server address="/orderService">
 		<jaxrs:serviceBeans>
 			<ref bean="orderServiceImpl" />
@@ -118,10 +122,27 @@
 	</jaxrs:server>
 	
 	
-	<!-- 注册安全管理器 -->
+	<!--
+		#########################################################
+		shiro权限控制
+		#########################################################
+	-->
+	<!-- 
+		注册安全管理器 
+		realm:注入realm,ref为类名首字母小写
+		cacheManager:注入缓存管理器
+	-->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<!-- 注入realm -->
 		<property name="realm" ref="userRealm"></property>
+		<property name="cacheManager" ref="cacheManager"></property>
+	</bean>
+	
+	<!-- 
+		注册缓存管理器
+		cacheManagerConfigFile:指定配置文件的位置
+	 -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>
 	</bean>
 	
 	<!-- 初始化shiro框架提供的过滤器 -->

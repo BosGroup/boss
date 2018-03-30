@@ -138,7 +138,7 @@
 	</bean>
 	
 	<!-- 
-		注册缓存管理器
+		注册ehcache缓存管理器
 		cacheManagerConfigFile:指定配置文件的位置
 	 -->
 	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
@@ -183,5 +183,46 @@
 				/** = authc
 			</value>
 		</property>
+	</bean>
+	
+	<!--
+		#########################################################
+		quartz定时任务
+		#########################################################
+	-->
+	
+	<!-- 注册任务详情,通过反射的方式调用目标类的目标方法-->
+	<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	
+		<!-- 注入目标对象,任务类 -->
+		<property name="targetObject" ref="workbillJob"></property>
+		<!-- 注入目标方法 ,任务方法-->
+		<property name="targetMethod" value="sendMail"></property>
+	</bean>
+	
+	
+	<!-- 注册触发器,可以理解为这是一个闹钟 -->
+	<bean id="emailTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	
+		<!-- 使用cron表达式指定触发的规则.闹钟在什么时候响起 -->
+		<property name="cronExpression">
+			<!-- 每天早上6点执行一次 -->
+			<value>0 0 6 * * ?</value>
+		</property>
+		
+		<!-- 注入任务详情,闹钟响起的时候要做什么事情 -->
+		<property name="jobDetail" ref="jobDetail"></property>
+	</bean>
+	
+	
+	<!-- 任务工厂类,spring提供的一个工厂类,这个类可以简单理解为是一台可以设置多个闹钟的手机 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	
+		<!-- 注入触发器,可以简单理解为闹钟的集合 -->
+		<property name="triggers">
+			<!-- 指定具体的触发器,可以简单理解为具体的一个闹钟 -->
+			<ref bean="emailTrigger"/>
+		</property>
+	
 	</bean>
 </beans>

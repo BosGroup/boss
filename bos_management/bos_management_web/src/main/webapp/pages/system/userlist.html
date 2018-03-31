@@ -58,10 +58,11 @@
 				width : 120,
 				rowspan : 2,
 				align : 'center',
-				//修改日期的格式化规则,这里需要引入一个js文件
+				//formatter格式化字段
 				formatter : function(value, row, index) {
 					//console.log(value);
 					if (value != null) {
+						//修改日期的格式化规则,这里需要引入一个js文件
 						return dateFormat(value.time);
 					} else {
 						return ""

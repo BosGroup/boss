@@ -2,7 +2,12 @@ package com.imooc.bos.web.action.take_delivery;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,6 +44,8 @@ public class ImageAction extends ActionSupport{
         this.imgFile = imgFile;
     }
     
+    
+    //########################### 上传图片 #############################
     //使用属性驱动获取用户上传的文件名
     private String imgFileFileName;
     public void setImgFileFileName(String imgFileFileName) {
@@ -86,6 +93,66 @@ public class ImageAction extends ActionSupport{
         HttpServletResponse response = ServletActionContext.getResponse();
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(json);
+        return NONE;
+    }
+    
+    
+    //########################### 开启图片空间 #############################
+    @Action(value="imageAction_manager")
+    public String manager() throws IOException{
+        //指定保存图片的文件夹
+        String dirPath = "/upload";
+        
+        //指定图片扩展名
+        String [] fileTypes = new String[] {"gif", "jpg", "jpeg", "png", "bmp"};
+        
+        //获取保存文件的文件夹的绝对磁盘路径
+        ServletContext servletContext = ServletActionContext.getServletContext();
+        String dirRealPath = servletContext.getRealPath(dirPath);
+        //保存文件的文件夹对象
+        File currentPathFile = new File(dirRealPath);
+        
+        //遍历目录获取文件信息
+        List<Hashtable> fileList = new ArrayList<Hashtable>();
+        if(currentPathFile.listFiles() != null) {
+            for (File file : currentPathFile.listFiles()) {
+                Hashtable<String, Object> hash = new Hashtable<String, Object>();
+                String fileName = file.getName();
+                if(file.isDirectory()) {
+                    hash.put("is_dir", true);
+                    hash.put("has_file", (file.listFiles() != null));
+                    hash.put("filesize", 0L);
+                    hash.put("is_photo", false);
+                    hash.put("filetype", "");
+                } else if(file.isFile()){
+                    String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                    hash.put("is_dir", false);
+                    hash.put("has_file", false);
+                    hash.put("filesize", file.length());
+                    hash.put("is_photo", Arrays.<String>asList(fileTypes).contains(fileExt));
+                    hash.put("filetype", fileExt);
+                }
+                hash.put("filename", fileName);
+                hash.put("datetime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModified()));
+                fileList.add(hash);
+            }
+        }
+        
+        //封装写回客户端的数据
+        JSONObject result = new JSONObject();
+        
+        //封装保存文件的文件夹的路径 : 本项目路径 + 文件夹名
+        String contextPath = servletContext.getContextPath();
+        result.put("current_url", contextPath + "/upload/");
+        
+        //封装所有的图片信息
+        result.put("file_list", fileList);
+        
+        //返回数据
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(result.toString());
+        
         return NONE;
     }
 }

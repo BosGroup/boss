@@ -26,8 +26,9 @@
 				//初始化kindeditor控件
 				KindEditor.ready(function(K) {
 	                window.editor = K.create('#description',{
-	                	//指定处理图片上传的Action的路径
-	                    uploadJson : '../../imageAction_upload.action',   
+	                    uploadJson : '../../imageAction_upload.action',  //指定处理图片上传的Action的路径
+	                    fileManagerJson : "../../imageAction_manager.action",//指定处理图片空间的action地址
+	                    allowFileManager : true   //开启图片空间
 	            	});
 	       		});
 			});

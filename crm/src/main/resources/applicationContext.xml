@@ -30,10 +30,10 @@
 	-->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.146.145:1521:ORCL" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.45.200:1521:ORCL" />
 		<!-- **********************修改用户名和密码************************ -->
-		<property name="user" value="crm" />
-		<property name="password" value="crm" />
+		<property name="user" value="heima_bos_team05" />
+		<property name="password" value="heima_bos_team05" />
 	</bean>
 	<!-- spring整合JPA -->
 	<bean id="entityManagerFactory"

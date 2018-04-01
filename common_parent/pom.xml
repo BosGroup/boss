@@ -301,8 +301,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
-			<artifactId>itext-asian</artifactId>
-			<version>5.2.0</version>
+			<artifactId>itextAsain</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 		<!-- groovy -->

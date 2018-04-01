@@ -20,6 +20,10 @@ public interface AreaRepository extends JpaRepository<Area, Long>{
     
     //根据省市区查询区域
     Area findByProvinceAndCityAndDistrict(String province, String city, String district);
+    
+    // SELECT a.C_PROVINCE,COUNT(*) FROM T_AREA a GROUP BY a.C_PROVINCE;
+    @Query("select a.province,count(*) from Area a group by a.province")
+    List<Object[]> exportCharts();
 
 }
   

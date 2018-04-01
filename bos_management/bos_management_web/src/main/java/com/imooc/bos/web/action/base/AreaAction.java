@@ -3,6 +3,7 @@ package com.imooc.bos.web.action.base;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -39,6 +41,12 @@ import com.imooc.bos.web.action.CommonAction;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
@@ -248,6 +256,60 @@ public class AreaAction extends CommonAction<Area> {
         workbook.write(outputStream);
         workbook.close();
         
+        return NONE;
+    }
+    
+    
+    //################### 导出区域图表  #################### 
+    @Action(value = "areaAction_exportCharts")
+    public String exportCharts() throws IOException {
+        //封装二维数组
+        List<Object[]> list = areaService.exportCharts();
+        list2json(list, null);
+        return NONE;
+    }
+    
+    
+    //################### 导出区域到PDF  #################### 
+    @Autowired
+    private DataSource dataSource;
+
+    @Action(value = "areaAction_exportPDF")
+    public String exportPDF() throws Exception {
+
+        // 读取 jrxml模板文件
+        String jrxml = ServletActionContext.getServletContext()
+                .getRealPath("/jasper/area.jrxml");
+        
+        // 准备需要数据
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("company", "百度科技");
+        
+        // 准备需要数据
+        JasperReport report = JasperCompileManager.compileReport(jrxml);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(report,
+                parameters, dataSource.getConnection());
+
+        HttpServletResponse response = ServletActionContext.getResponse();
+        OutputStream ouputStream = response.getOutputStream();
+        
+        // 设置相应参数，以附件形式保存PDF
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("UTF-8");
+        //使用工具类对文件名进行编码
+        response.setHeader("Content-Disposition",
+                "attachment; filename=" + FileDownloadUtils
+                        .encodeDownloadFilename("区域数据.pdf", ServletActionContext
+                                .getRequest().getHeader("user-agent")));
+        
+        // 使用JRPdfExproter导出器导出pdf
+        JRPdfExporter exporter = new JRPdfExporter();
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, ouputStream);
+        
+        exporter.exportReport();// 导出
+        ouputStream.close();// 关闭流
+
         return NONE;
     }
 }

@@ -2,11 +2,13 @@ package com.imooc.bos.service.take_delivery.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.imooc.bos.dao.take_delivery.PromotionRepository;
+import com.imooc.bos.domain.take_delivery.PageBean;
 import com.imooc.bos.domain.take_delivery.Promotion;
 import com.imooc.bos.service.take_delivery.PromotionService;
 
@@ -31,6 +33,22 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public Page<Promotion> findAll(Pageable pageable) {
         return promotionRepository.findAll(pageable);
+    }
+
+    @Override
+    public PageBean<Promotion> findAll4Fore(int page, int pageSize) {
+        
+        //查询宣传任务
+        Pageable pageable = new PageRequest(page, pageSize);
+        //调用上面的分页查询方法
+        Page<Promotion> p = findAll(pageable);
+        
+        //封装pageBean,需要在Promotion类上指定封装pageBean时泛型的类型的注解
+        PageBean<Promotion> pageBean = new PageBean<>();
+        pageBean.setList(p.getContent());
+        pageBean.setTotal(p.getTotalElements());
+        
+        return pageBean;
     }
     
 }

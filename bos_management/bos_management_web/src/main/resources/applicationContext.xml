@@ -178,6 +178,8 @@
 				/js/** = anon
 				/validatecode.jsp* = anon
 				/userAction_login.action = anon
+				/webService/** = anon
+				/upload/* = anon
 				<!-- /courierAction_pageQuery.action = perms["courierAction_pageQuery"] -->
 				<!-- /hi.html = perms["courierAction_pageQuery"] -->
 				/** = authc
@@ -225,4 +227,21 @@
 		</property>
 	
 	</bean>
+	
+	<!--
+		#########################################################
+		发布促销任务的WebService
+		#########################################################
+	-->
+	<jaxrs:server address="/promotionService">
+		<jaxrs:serviceBeans>
+			<ref bean="promotionServiceImpl" />
+		</jaxrs:serviceBeans>
+		<jaxrs:inInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingInInterceptor"></bean>
+		</jaxrs:inInterceptors>
+		<jaxrs:outInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"></bean>
+		</jaxrs:outInterceptors>
+	</jaxrs:server>
 </beans>

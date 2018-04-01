@@ -15,6 +15,11 @@
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
 		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 		<script type="text/javascript" src="../../js/jquery.ocupload-1.1.2.js"></script>
+		
+		<script src="../../js/highcharts/highcharts.js"></script>
+		<script src="../../js/highcharts/modules/exporting.js"></script>
+		<script src="../../js/highcharts/highcharts-zh_CN.js"></script>
+
 		<script type="text/javascript">
 			function doAdd(){
 				$('#addWindow').window("open");
@@ -32,6 +37,32 @@
 			function doExportExcel(){
 				//发送一个请求,查询数据,拼装文件
 				window.location.href="../../areaAction_exportExcel.action"
+			}
+			
+			//导出图表
+			function doExportCharts(){
+				//打开窗口
+				$("#chartWindow").window("open");
+				//发起请求查询数据
+				$.post("../../areaAction_exportCharts.action", function(data) {
+					//使用highcharts图表
+					$('#container').highcharts({
+						title : {
+							text : '区域数量占比'
+						},
+						series : [ {
+							type : 'pie',
+							name : '区域数量占比',
+							data : data
+						} ]
+					});
+				})
+			}
+			
+			//导出PDF
+			function doExportPDF() {
+				//发送一个请求,查询数据,拼装文件
+				window.location.href = "../../areaAction_exportPDF.action"
 			}
 			
 			//工具栏
@@ -56,9 +87,19 @@
 				iconCls : 'icon-redo'
 			}, {
 				id : 'button-export',
-				text : '导处Excle',
+				text : '导出Excle',
 				iconCls : 'icon-redo',
 				handler : doExportExcel
+			}, {
+				id : 'button-export',
+				text : '导出图表',
+				iconCls : 'icon-redo',
+				handler : doExportCharts
+			}, {
+				id : 'button-export',
+				text : '导出PDF',
+				iconCls : 'icon-redo',
+				handler : doExportPDF
 			}];
 			// 定义列
 			var columns = [ [ {
@@ -127,11 +168,19 @@
 			        width: 400,
 			        modal: true,
 			        shadow: true,
-			        closed: true,
+			        closed: true,  //将弹窗隐藏起来,待点击后才打开
 			        height: 400,
 			        resizable:false
 			    });
 				
+				$('#chartWindow').window({
+					width : 700,
+					modal : true,
+					shadow : true,
+					closed : true,    //将弹窗隐藏起来,待点击后才打开
+					height : 600,
+					resizable : false
+				});
 			});
 		
 			function doDblClickRow(){
@@ -198,6 +247,13 @@
 			</div>
 		</div>
 		
+		<!-- 弹窗 -->
+		<div class="easyui-window" title="区域分布图" id="chartWindow"
+			collapsible="false" minimizable="false" maximizable="false"
+			style="top: 20px; left: 200px">
+			<div id="container" style="min-width: 400px; height: 400px"></div>
+		</div>
+	
 		<!-- 查询区域-->
 		<div class="easyui-window" title="查询区域窗口" closed="true" id="searchWindow" collapsible="false" minimizable="false" maximizable="false" style="width: 400px; top:40px;left:200px">
 			<div style="overflow:auto;padding:5px;" border="false">

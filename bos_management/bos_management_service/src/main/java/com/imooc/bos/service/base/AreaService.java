@@ -34,6 +34,12 @@ public interface AreaService {
      */
     List<Area> findByQ(String q);
 
+    /**  
+     * 导出区域图表
+     * @return  
+     */
+    List<Object[]> exportCharts();
+
 
 
 }

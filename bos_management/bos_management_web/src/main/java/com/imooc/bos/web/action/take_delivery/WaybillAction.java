@@ -72,6 +72,7 @@ public class WaybillAction extends CommonAction<WayBill> {
         this.upload = upload;
     }
 
+    //批量导入
     @Action(value = "waybill_batchImport", results = {
             @Result(name = "success", location = "/pages/take_delivery/waybill_import.html", type = "redirect")})
     public String batchImport() {
@@ -115,10 +116,10 @@ public class WaybillAction extends CommonAction<WayBill> {
             workbook.close();
         } catch (IOException e) {
               
-           
             e.printStackTrace();  
             
         }
+        
         return SUCCESS;
         
     }

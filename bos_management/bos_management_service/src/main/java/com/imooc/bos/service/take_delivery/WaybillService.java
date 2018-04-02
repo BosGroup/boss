@@ -16,9 +16,14 @@ public interface WaybillService {
      * 保存运单
      * @param model
      */
+    
+    
+    
+    void batchImport(List<WayBill> list);
+    
     void save(WayBill model);
 
-    void batchImport(List<WayBill> list);
+
 
 }
   

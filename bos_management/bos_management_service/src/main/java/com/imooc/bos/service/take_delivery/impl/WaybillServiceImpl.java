@@ -24,15 +24,18 @@ public class WaybillServiceImpl implements WaybillService {
     private WaybillRepository waybillRepository;
 
     @Override
-    public void save(WayBill wayBill) {
-        waybillRepository.save(wayBill);
-    }
-
-    @Override
     public void batchImport(List<WayBill> list) {
           
         waybillRepository.save(list);
         
     }
+    
+    @Override
+    public void save(WayBill wayBill) {
+        waybillRepository.save(wayBill);
+    }
+
+    
+   
 }
   

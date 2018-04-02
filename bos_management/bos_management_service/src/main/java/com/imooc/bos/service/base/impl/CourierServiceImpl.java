@@ -43,7 +43,7 @@ public class CourierServiceImpl implements CourierService {
      * 权限控制的方式二:使用注解,在调用方法时,框架就会检查当前用户是否有对应的权限,如果有就放行,没有就抛异常
      * 使用注解方式进行权限控制,必须开启cglib代理,可以在applicationContext.xml中配置
      */
-    @RequiresPermissions("batchDel")
+    //@RequiresPermissions("batchDel")
     @Override
     public void batchDel(String ids) {
         // 真实开发中只有逻辑删除
@@ -66,6 +66,19 @@ public class CourierServiceImpl implements CourierService {
     public List<Courier> findAvaible() {
         return courierRepository.findByDeltagIsNull();
     }
+
+	@Override
+	public void doRestore(String ids) {
+		// TODO Auto-generated method stub
+		//判断是否为空
+		if (StringUtils.isNotEmpty(ids)) {
+			//切割数据
+			String[] split = ids.split(",");
+			for (String id : split) {
+				courierRepository.updateRestoreById(Long.parseLong(id));
+			}
+		}
+	}
 
 }
   

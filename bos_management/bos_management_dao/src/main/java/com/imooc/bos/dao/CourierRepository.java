@@ -28,5 +28,9 @@ public interface CourierRepository
     
     //查询在职快递员
     List<Courier> findByDeltagIsNull();
+    
+    @Modifying
+    @Query("update Courier set deltag = 0 where id = ?")
+	void updateRestoreById(long parseLong);
 
 }

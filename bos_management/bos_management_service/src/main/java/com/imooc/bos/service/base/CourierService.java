@@ -46,5 +46,7 @@ public interface CourierService {
      * @return  
      */
     List<Courier> findAvaible();
+
+	void doRestore(String ids);
 }
   

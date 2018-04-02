@@ -89,6 +89,7 @@
 				        },
 				        yAxis: {
 				            min: 0,
+				            allowDecimals: false,
 				            title: {
 				                text: '总数量(个)'
 				            }
@@ -97,7 +98,7 @@
 				            enabled: false
 				        },
 				        tooltip: {
-				            pointFormat: '分区总数: <b>{point.y:.1f} 个</b>'
+				            pointFormat: '分区总数: <b>{point.y} 个</b>'
 				        },
 				        series: [{
 				            name: '总分区',
@@ -107,7 +108,7 @@
 				                rotation: -90,
 				                color: '#FFFFFF',
 				                align: 'right',
-				                format: '{point.y:.1f}', // one decimal
+				                format: '{point.y}', // one decimal
 				                y: 10, // 10 pixels down from the top
 				                style: {
 				                    fontSize: '13px',

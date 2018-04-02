@@ -21,6 +21,7 @@ public interface CourierRepository
         extends JpaRepository<Courier, Long>, JpaSpecificationExecutor<Courier> {
 
     // 自定义方法
+	
     // 根据ID更改删除的标志位
     @Modifying
     @Query("update Courier set deltag = 1 where id = ?")

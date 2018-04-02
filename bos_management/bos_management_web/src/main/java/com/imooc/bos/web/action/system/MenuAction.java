@@ -99,5 +99,24 @@ public class MenuAction extends CommonAction<Menu>{
         
         return NONE;
     }
+    //属性驱动获取角色id
+    private Long roleId;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+    //根据角色id查询菜单
+    @Action(value = "menuAction_findByRoleId")
+    public String findByRoleId() throws IOException{
+        
+        List<Menu> list=menuService.findByRoleId(roleId);
+        
+       //增加忽略的属性,忽略roles,childrenMenus是避免懒加载异常,忽略parentMenu是避免死循环(子菜单查询父菜单, 父菜单又去查询子菜单)
+       JsonConfig jsonConfig = new JsonConfig();
+       jsonConfig.setExcludes(new String[]{ "roles", "childrenMenus", "parentMenu","children" });
+       
+       list2json(list, jsonConfig);
+       return NONE;
+    }
+    
 }
   

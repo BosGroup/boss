@@ -40,5 +40,10 @@ public interface SubAreaService {
      */
     List<SubArea> findAssociatedsubAreas(Long fixedAreaId);
 
+
+     //导出图表
+    List<Object[]> exportCharts();
+   
+
 }
   

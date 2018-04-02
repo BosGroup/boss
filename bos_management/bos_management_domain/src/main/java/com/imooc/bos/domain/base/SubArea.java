@@ -34,12 +34,15 @@ public class SubArea {
     
     @Column(name = "C_ASSIST_KEY_WORDS")
     private String assistKeyWords; // 辅助关键字
-
+    
+    @Column(name = "C_POSITION")
+    private String position; // 分区 的位置
+ 
     @ManyToOne
-    @JoinColumn(name = "C_AREA_ID")
+    @JoinColumn(name = "C_AREA_ID") 
     private Area area; // 区域
     
-    @ManyToOne
+    @ManyToOne 
     @JoinColumn(name = "C_FIXEDAREA_ID")
     private FixedArea fixedArea; // 定区
 
@@ -89,6 +92,15 @@ public class SubArea {
 
     public void setAssistKeyWords(String assistKeyWords) {
         this.assistKeyWords = assistKeyWords;
+    }
+    
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Area getArea() {

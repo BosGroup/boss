@@ -21,7 +21,22 @@
 			}
 			
 			function doEdit(){
-				alert("修改...");
+				//判断用户勾选的数据的条数
+				var result = $("#grid").datagrid("getSelections")
+				if(result.length == 1){
+					//勾选一条数据的时候才可以进行修改
+					//打开窗口
+					$("#addWindow").window("open")
+					//回填数据到form表单, load读取记录填充到表单中
+					//因为SpringDataJPA的save方法有修改功能,所以点保存后这里会自动实现修改并保存
+					//回显combobox数据
+					var area = result[0].area;
+					$('#selectarea').combobox('setValue', area.province+area.city+area.district)
+					$("#addWindow").form("load",result[0])
+				}else{
+					$.messager.alert("提示","您只能选择一条数据进行修改", "info")
+				}
+				
 			}
 			
 			function doDelete(){
@@ -234,7 +249,7 @@
 							<td>选择区域</td>
 							<td>
 								<!-- mode定义了当文本改变时如何读取列表数据,remote模式时，用户输入将被发送到名为'q'的HTTP请求参数到服务器检索新数据 -->
-								<input class="easyui-combobox" name="area.id"
+								<input id="selectarea" class="easyui-combobox" name="area.id"
 									 data-options="valueField:'id',textField:'name',mode:'remote',
 									 url:'../../areaAction_findAll.action'" />
 							</td>

@@ -133,16 +133,22 @@ public class SubareaAction extends CommonAction<SubArea>{
             HSSFRow dataRow = sheet.createRow(lastRowNum+1);           
             
             dataRow.createCell(0).setCellValue(subArea.getId());
-            dataRow.createCell(0).setCellValue(subArea.getStartNum());
-            dataRow.createCell(1).setCellValue(subArea.getEndNum());
-            dataRow.createCell(2).setCellValue(subArea.getSingle());
-            dataRow.createCell(3).setCellValue(subArea.getKeyWords());
-            dataRow.createCell(4).setCellValue(subArea.getAssistKeyWords());
-            dataRow.createCell(5).setCellValue(subArea.getArea().getName());
-            if (subArea.getFixedArea()!=null) {
-                dataRow.createCell(6).setCellValue(subArea.getFixedArea().getFixedAreaName());  
+            dataRow.createCell(1).setCellValue(subArea.getStartNum());
+            dataRow.createCell(2).setCellValue(subArea.getEndNum());
+            if (subArea.getSingle()=='0') {
+                dataRow.createCell(3).setCellValue("单双号");
+            }else if (subArea.getSingle()=='1') {
+                dataRow.createCell(3).setCellValue("单号");
             }else {
-                dataRow.createCell(6).setCellValue("该分区尚未关联定区");
+                dataRow.createCell(3).setCellValue("双号");
+            }
+            dataRow.createCell(4).setCellValue(subArea.getKeyWords());
+            dataRow.createCell(5).setCellValue(subArea.getAssistKeyWords());
+            dataRow.createCell(6).setCellValue(subArea.getArea().getName());
+            if (subArea.getFixedArea()!=null) {
+                dataRow.createCell(7).setCellValue(subArea.getFixedArea().getFixedAreaName());  
+            }else {
+                dataRow.createCell(7).setCellValue("该分区尚未关联定区");
             }          
             
         }

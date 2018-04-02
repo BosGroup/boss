@@ -53,7 +53,7 @@ public class SubareaAction extends CommonAction<SubArea>{
     // AJAX请求不需要跳转页面
     @Action(value = "subAreaAction_pageQuery")
     public String pageQuery() throws IOException{
-        
+        System.out.println("000001111111");
         // EasyUI的页码是从1开始的, SPringDataJPA的页码是从0开始的, 所以要-1
         Pageable pageable = new PageRequest(page - 1, rows);
         Page<SubArea> page = subAreaService.findAll(pageable);

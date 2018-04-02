@@ -56,6 +56,13 @@
 				alert("导入");
 			}
 			
+			//分区导出Excel
+			function doExportExcel(){
+			 //发送一个请求,查询数据,拼装文件
+			 window.location.href="../../subAreaAction_exportExcel.action";
+			   
+			}
+			
 			//工具栏
 			var toolbar = [ {
 				id : 'button-search',	
@@ -84,9 +91,9 @@
 				handler : doImport
 			},{
 				id : 'button-export',
-				text : '导出',
+				text : '导出Excel',
 				iconCls : 'icon-undo',
-				handler : doExport
+				handler : doExportExcel
 			}];
 			// 定义列
 			var columns = [ [ {

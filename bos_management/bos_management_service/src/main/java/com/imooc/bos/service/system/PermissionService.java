@@ -1,5 +1,8 @@
 package com.imooc.bos.service.system;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,6 +27,8 @@ public interface PermissionService {
      * @param permission  
      */
     void save(Permission permission);
+
+    List<Permission> findByRoleId(Long roleId);
 
 
 }

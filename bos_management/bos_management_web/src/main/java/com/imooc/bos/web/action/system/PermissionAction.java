@@ -2,7 +2,11 @@ package com.imooc.bos.web.action.system;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -18,6 +22,7 @@ import com.imooc.bos.domain.system.Permission;
 import com.imooc.bos.service.system.PermissionService;
 import com.imooc.bos.web.action.CommonAction;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 
 /**  
@@ -80,6 +85,28 @@ public class PermissionAction extends CommonAction<Permission>{
         jsonConfig.setExcludes(new String[] {"roles"});
         list2json(list, jsonConfig);
         
+        return NONE;
+    }
+    //角色id
+    private Long roleId;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+    //根据角色id查找权限
+    @Action(value="permissionAction_findByRoleId")
+    public String findByRoleId() throws IOException{
+        
+        //findAll(pageable)查询当前页,fundAll(null)查询所有
+        List<Permission> permissions= permissionService.findByRoleId(roleId);
+        
+        //增加忽略属性
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"roles"});
+        String json = JSONArray.fromObject(permissions,jsonConfig).toString();
+        
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(json);
         return NONE;
     }
 }

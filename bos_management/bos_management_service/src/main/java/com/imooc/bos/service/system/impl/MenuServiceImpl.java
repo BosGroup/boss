@@ -1,6 +1,8 @@
 package com.imooc.bos.service.system.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.imooc.bos.dao.system.MenuRepository;
+import com.imooc.bos.dao.system.RoleRepository;
 import com.imooc.bos.domain.system.Menu;
+import com.imooc.bos.domain.system.Role;
 import com.imooc.bos.domain.system.User;
 import com.imooc.bos.service.system.MenuService;
 
@@ -53,6 +57,18 @@ public class MenuServiceImpl implements MenuService{
            return menuRepository.findAll();
         }
         return menuRepository.findbyUser(user.getId());
+    }
+    @Autowired
+    private RoleRepository roleRepository;
+    
+    @Override
+    public List<Menu> findByRoleId(Long roleId) {
+          
+        Role role = roleRepository.findOne(roleId);
+        Set<Menu> menus = role.getMenus();
+        ArrayList<Menu> list = new ArrayList<>(menus);
+        
+        return list;
     }
 
 }

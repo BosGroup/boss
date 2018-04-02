@@ -39,7 +39,7 @@ public class User implements Serializable{
     private String remark; // 备注
     
     @Column(name = "C_STATION")
-    private String station; // 状态
+    private String station; // 单位
     
     @Column(name = "C_TELEPHONE")
     private String telephone; // 联系电话

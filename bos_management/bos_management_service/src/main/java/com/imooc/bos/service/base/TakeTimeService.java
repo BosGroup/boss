@@ -20,5 +20,7 @@ public interface TakeTimeService {
 
     List<TakeTime> findAll();
 
+    void batchDel(String ids);
+
 }
   

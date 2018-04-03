@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
@@ -23,11 +25,16 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
 import com.imooc.bos.domain.take_delivery.WayBill;
 import com.imooc.bos.service.take_delivery.WaybillService;
 import com.imooc.bos.web.action.CommonAction;
+
+import net.sf.json.JSONObject;
 
 /**
  * ClassName:WaybillAction <br/>
@@ -174,6 +181,22 @@ public class WaybillAction extends CommonAction<WayBill> {
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
         workbook.write(outputStream);
         workbook.close();
+        return NONE;
+    }
+    
+    @Action(value = "wayBillAction_pageQuery")
+    public String pageQuery() throws IOException {
+        Pageable pageable = new PageRequest(page - 1, rows);
+        Page<WayBill> page = waybillService.findAll(pageable);
+        long total = page.getTotalElements();
+        List<WayBill> list = page.getContent();
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", list);
+        String json = JSONObject.fromObject(map).toString();
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(json);
         return NONE;
     }
 }

@@ -21,7 +21,19 @@
 			}
 			
 			function doEdit(){
-				alert("修改...");
+				
+				var rows = $("#grid").datagrid("getSelections")
+				if(rows.length==1){
+					//打开窗口
+					$('#addWindow').window("open");
+					//回填数据到form表单, load读取记录填充到表单中
+					//因为SpringDataJPA的save方法有修改功能,所以点保存后这里会自动实现修改并保存
+					$('#dd').combobox('setValue', rows[0].standard.id)
+					$("#courierForm").form("load",rows[0])
+				}else{
+					$.messager.alert("提示","您只能选择一条数据进行修改", "info")
+				}
+				
 			}
 			
 			function doDelete(){
@@ -264,6 +276,7 @@
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="4">收派员信息</td>
+							<input type="hidden" name="id"/>
 						</tr>
 						<tr>
 							<td>快递员工号</td>
@@ -303,7 +316,7 @@
 							<td>取派标准</td>
 							<td>
 								<!-- 若是关联对象(一对多等),用对象.属性id可以实现自动封装 -->
-								<input type="text" name="standard.id" 
+								<input id="dd" type="text" name="standard.id" 
 										class="easyui-combobox" 
 										data-options="required:true,valueField:'id',textField:'name',
 											url:'../../standard_findAll.action'"/>

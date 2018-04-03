@@ -107,12 +107,20 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
             //存储激活码,使用spring-data-redis,key使用用户的手机号作为唯一标识,设置有效期为一天
             redisTemplate.opsForValue().set(model.getTelephone(), activeCode,1,TimeUnit.DAYS);            
             
-            String emailBody = "感谢您注册本网站的账号,请在24小时之内点击<a href='http://localhost:8280/bos_portal/customerAction_active.action?activeCode="
+            final String emailBody = "感谢您注册本网站的账号,请在24小时之内点击<a href='http://localhost:8280/bos_portal/customerAction_active.action?activeCode="
                     +activeCode+"&telephone=" + model.getTelephone()+ "'>激活链接</a>激活您的帐号";
             
             //根据用户填写的邮箱地址发送激活邮件,此处也可以用消息队列完成,节省访问时间
-            MailUtils.sendMail("激活邮件",emailBody,model.getEmail());
-            
+           // MailUtils.sendMail("激活邮件",emailBody,model.getEmail());
+            jmsTemplate.send("mail", new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    MapMessage message = session.createMapMessage();
+                    message.setString("emailBody", emailBody);
+                    message.setString("mail", model.getEmail());
+                    return message;
+                }
+            });
             return SUCCESS;
         }
         

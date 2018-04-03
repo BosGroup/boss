@@ -6,8 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -127,6 +132,49 @@ public class WaybillAction extends CommonAction<WayBill> {
         return NONE;
 
     }
+     
     
+    @Action(value = "wayBill_downLoad")
+    public String downLoad() throws IOException {
+
+        // 定义表头
+        String[] title = {"编号", "产品", "快递产品类型", "发件人姓名", "发件人电话", "发件人地址", "收件人姓名", "收件人电话",
+                "收件人公司", "收件人地址"};
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        // 创建sheet
+        HSSFSheet sheet = workbook.createSheet();
+        // 创建第一行
+        HSSFRow row1 = sheet.createRow(0);
+        HSSFCell cell = null;
+        // 插入第一行数据的表头
+        for (int i = 0; i < title.length; i++) {
+            cell = row1.createCell(i);
+            cell.setCellValue(title[i]);
+        }
+        // 定义模板的样式
+        String[] title2 = {"000001", "电子产品", "速运隔日", "张三", "13560728911", "广东省深圳市宝安区xx路", "李四",
+                "13689087687", "xx公司", "北京市昌平区xx路"};
+        // 创建第二行
+        HSSFRow row2 = sheet.createRow(1);
+        for (int i = 0; i < title2.length; i++) {
+            cell = row2.createCell(i);
+            cell.setCellValue(title2[i]);
+        }
+        // 文件名
+        String fileName = "area.xls";
+     
+        HttpServletResponse response = ServletActionContext.getResponse();
+        ServletContext servletContext = ServletActionContext.getServletContext();
+        HttpServletRequest request = ServletActionContext.getRequest();
+        ServletOutputStream outputStream = response.getOutputStream();
+      
+        String mimeType = servletContext.getMimeType(fileName);
+        response.setContentType(mimeType);
+        // 设置信息头
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        workbook.write(outputStream);
+        workbook.close();
+        return NONE;
+    }
 }
 

@@ -40,5 +40,11 @@ public interface FixedAreaService {
      */
     void assignsubAreas2FixedArea(Long fixedAreaId, Long[] subAreaIds);
 
+    /**
+     * 批量删除定区 
+     * @param ids
+     */
+    void batchDel(String ids);
+
 }
   

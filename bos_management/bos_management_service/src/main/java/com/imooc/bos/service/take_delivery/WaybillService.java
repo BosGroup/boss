@@ -1,5 +1,7 @@
 package com.imooc.bos.service.take_delivery;
 
+import java.util.List;
+
 import com.imooc.bos.domain.take_delivery.WayBill;
 
 /**  
@@ -14,7 +16,14 @@ public interface WaybillService {
      * 保存运单
      * @param model
      */
+    
+    
+    
+    void batchImport(List<WayBill> list);
+    
     void save(WayBill model);
+
+
 
 }
   

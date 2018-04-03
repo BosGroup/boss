@@ -2,16 +2,20 @@ package com.imooc.bos.web.action.take_delivery;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
+import org.apache.activemq.thread.Scheduler;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.quartz.SchedulerFactory;
+import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -109,5 +113,7 @@ public class PromotionAction extends CommonAction<Promotion> {
         
         return NONE;
     }
+    private static SchedulerFactory gSchedulerFactory = new StdSchedulerFactory();  
+    
 }
   

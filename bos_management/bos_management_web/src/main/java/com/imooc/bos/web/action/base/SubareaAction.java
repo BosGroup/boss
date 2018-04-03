@@ -177,5 +177,18 @@ public class SubareaAction extends CommonAction<SubArea>{
         
         return NONE;
     }
+    
+    
+    //导出图表Action
+    @Action(value="subareaAction_exportCharts")
+    public String exportCharts() throws IOException{
+        
+        List<Object[]> list = subAreaService.exportCharts();
+        
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"subareas","couriers"});
+        list2json(list, jsonConfig);
+        return NONE;
+    }
 }
   

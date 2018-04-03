@@ -13,8 +13,10 @@
 		<script type="text/javascript" src="../../js/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.portal.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
-		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../../js/easyui/locale/easyui-lang-zh_CN.js"></script>
 		<script type="text/javascript" src="../../js/highcharts/highcharts.js"></script>
+		<script type="text/javascript" src="../../js/highcharts/modules/exporting.js"></script>
+		<script type="text/javascript" src="../../js/highcharts/highcharts-zh_CN.js"></script>
 		<script type="text/javascript">
 			function doAdd(){
 				$('#addWindow').window("open");
@@ -30,8 +32,7 @@
 					//回填数据到form表单, load读取记录填充到表单中
 					//因为SpringDataJPA的save方法有修改功能,所以点保存后这里会自动实现修改并保存
 					//回显combobox数据
-					var area = result[0].area;
-					$('#selectarea').combobox('setValue', area.province+area.city+area.district)
+					$('#selectarea').combobox('setValue', result[0].area.id)
 					$("#addWindow").form("load",result[0])
 				}else{
 					$.messager.alert("提示","您只能选择一条数据进行修改", "info")
@@ -61,6 +62,64 @@
 			 //发送一个请求,查询数据,拼装文件
 			 window.location.href="../../subAreaAction_exportExcel.action";
 			   
+			}
+			
+			function doExportCharts() {
+				//添加方法  首先打开窗口
+				$('#chartWindow').window("open")
+				
+				$.post("../../subareaAction_exportCharts.action",function(data){
+					
+					$('#container').highcharts({
+				        chart: {
+				            type: 'column'
+				        },
+				        title: {
+				            text: '全国各省分区数量统计'
+				        },
+				        xAxis: {
+				            type: 'category',
+				            labels: {
+				                rotation: -45,
+				                style: {
+				                    fontSize: '13px',
+				                    fontFamily: 'Verdana, sans-serif'
+				                }
+				            }
+				        },
+				        yAxis: {
+				            min: 0,
+				            allowDecimals: false,
+				            title: {
+				                text: '总数量(个)'
+				            }
+				        },
+				        legend: {
+				            enabled: false
+				        },
+				        tooltip: {
+				            pointFormat: '分区总数: <b>{point.y} 个</b>'
+				        },
+				        series: [{
+				            name: '总分区',
+				            data: data,
+				            dataLabels: {
+				                enabled: true,
+				                rotation: -90,
+				                color: '#FFFFFF',
+				                align: 'right',
+				                format: '{point.y}', // one decimal
+				                y: 10, // 10 pixels down from the top
+				                style: {
+				                    fontSize: '13px',
+				                    fontFamily: 'Verdana, sans-serif'
+				                }
+				            }
+				        }]
+				    });
+					
+				})
+				
 			}
 			
 			//工具栏
@@ -94,6 +153,11 @@
 				text : '导出Excel',
 				iconCls : 'icon-undo',
 				handler : doExportExcel
+			},{
+				id : 'button-export',
+				text : '导出分区图表',
+				iconCls : 'icon-undo',
+				handler : doExportCharts
 			}];
 			// 定义列
 			var columns = [ [ {
@@ -199,11 +263,11 @@
 			    });
 				
 				$('#chartWindow').window({
-			        width: 700,
+			        width: 900,
 			        modal: true,
 			        shadow: true,
 			        closed: true,
-			        height: 600,
+			        height: 500,
 			        resizable:false
 			    });
 				
@@ -250,7 +314,10 @@
 				<form id="subareaForm" method="post" action="../../subareaAction_save.action">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
-							<td colspan="2">分区信息</td>
+							<td colspan="2">分区信息
+								<!--提供隐藏域 装载id -->
+								<input type="hidden" name="id" />
+							</td>
 						</tr>
 						<tr>
 							<td>选择区域</td>
@@ -308,7 +375,7 @@
 		
 		<div class="easyui-window" title="分区分布图" id="chartWindow" collapsible="false" 
 				minimizable="false" maximizable="false" style="top:20px;left:200px">
-			<div id="container"></div>
+			<div id="container" style="min-width:400px;height:400px"></div>
 		</div>
 		
 		<!-- 查询分区 -->

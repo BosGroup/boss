@@ -3,6 +3,7 @@ package com.imooc.bos.dao;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.imooc.bos.domain.base.FixedArea;
 import com.imooc.bos.domain.base.SubArea;
@@ -23,5 +24,11 @@ public interface SubAreaRepository extends JpaRepository<SubArea, Long> {
     //如果字段是对象，必须是单一对象，不能是集合,传入的参数必须指定id属性
     List<SubArea> findByFixedArea(FixedArea fixedArea);
 
+    // @Query("select a.province,count(*) from Area a group by a.province")
+    @Query("select sa.area.province,count(*) from SubArea sa group by sa.area.province")
+    List<Object[]> exportCharts();
+
+
+    
 }
   

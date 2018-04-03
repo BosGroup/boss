@@ -30,6 +30,7 @@ import org.springframework.stereotype.Controller;
 
 import com.imooc.bos.domain.base.Courier;
 import com.imooc.bos.domain.base.Standard;
+import com.imooc.bos.domain.base.SubArea;
 import com.imooc.bos.service.base.CourierService;
 import com.imooc.bos.web.action.CommonAction;
 import com.imooc.crm.domain.Customer;
@@ -168,8 +169,11 @@ public class CourierAction extends CommonAction<Courier>{
         courierService.batchDel(ids);
         return SUCCESS;
     }
-    
-    
+    @Action(value="courierAction_doRestore",results={@Result(name="success",location="/pages/base/courier.html",type="redirect")})
+    public String doRestore(){
+    	courierService.doRestore(ids);
+    	return SUCCESS;
+    }
     //################### 查询所有在职的快递员  ####################
     // 方法一
     @Action("courierAction_listajax")
@@ -206,6 +210,16 @@ public class CourierAction extends CommonAction<Courier>{
         
         list2json(list, jsonConfig);
         
+        return NONE;
+    }
+    
+    // 查看定区关联的快递员  
+    @Action(value="courierAction_findAssociatedCourier")
+    public String findAssociatedCourier() throws IOException{
+        List<Courier> list = courierService.findAssociatedCourier(getModel().getId());
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"fixedAreas"});
+        list2json(list, jsonConfig);
         return NONE;
     }
     

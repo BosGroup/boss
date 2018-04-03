@@ -1,5 +1,6 @@
 package com.imooc.bos.service.system.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAll(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public void batchDel(String ids) {
+        // 真实开发中只有逻辑删除
+        // 判断数据是否为空  null " "
+        if(StringUtils.isNotEmpty(ids)){
+            // 切割数据
+            String[] split = ids.split(",");
+            for (String id : split) {
+                userRepository.updateDelTagById(Long.parseLong(id));
+            }
+        }
     }
 }
   

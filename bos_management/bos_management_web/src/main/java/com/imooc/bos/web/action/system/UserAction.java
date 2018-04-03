@@ -143,5 +143,19 @@ public class UserAction extends CommonAction<User>{
         page2json(page, jsonConfig);
         return NONE;
     }
+    
+    //####################### 删除用户  #########################
+    //使用属性驱动获取要删除的快递员的Id
+    private String ids;
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+    
+    @Action(value = "userAction_batchDel",
+        results={@Result(name="success",location="/pages/system/userlist.html",type="redirect")})
+    public String batchDel(){
+        userService.batchDel(ids);
+        return SUCCESS;
+    }
 }
   

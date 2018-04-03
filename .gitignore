@@ -3,3 +3,5 @@
 .settings
 .classpath
 target
+/bos_management/bos_management_web/src/main/resources/applicationContext.xml
+/crm/src/main/resources/applicationContext.xml

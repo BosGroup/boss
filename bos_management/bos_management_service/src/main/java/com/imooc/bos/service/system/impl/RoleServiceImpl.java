@@ -45,9 +45,7 @@ public class RoleServiceImpl implements RoleService {
     public void save(Role role, String menuIds, Long[] permissionIds) {
         
         roleRepository.save(role);
-        if(role.getId()!=null){
-            role=roleRepository.findOne(role.getId());
-        }
+        role=roleRepository.findOne(role.getId());
         
         //保存角色方法一:查询持久态对象,此种方法需要联表查询,效率较低
         /*if(StringUtils.isNotEmpty(menuIds)){

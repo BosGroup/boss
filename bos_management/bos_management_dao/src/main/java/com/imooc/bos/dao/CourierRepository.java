@@ -35,7 +35,6 @@ public interface CourierRepository
     void updateRestoreById(long parseLong);
 
     // 查看定区关联的快递员
-    @Modifying 
     @Query("select c from Courier c inner join c.fixedAreas f where f.id = ?")
     List<Courier> findByFixedArea(Long fixedAreaId);
 

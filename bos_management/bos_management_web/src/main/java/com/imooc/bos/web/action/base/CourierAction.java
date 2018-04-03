@@ -169,7 +169,6 @@ public class CourierAction extends CommonAction<Courier>{
         courierService.batchDel(ids);
         return SUCCESS;
     }
-    
     @Action(value="courierAction_doRestore",results={@Result(name="success",location="/pages/base/courier.html",type="redirect")})
     public String doRestore(){
     	courierService.doRestore(ids);

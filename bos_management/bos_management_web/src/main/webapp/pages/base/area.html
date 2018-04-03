@@ -26,7 +26,16 @@
 			}
 			
 			function doView(){
-				alert("修改...");
+				var rows = $("#grid").datagrid("getSelections")
+				if(rows.length==1){
+					//打开窗口
+					$('#addWindow').window("open");
+					//回填数据到form表单, load读取记录填充到表单中
+					//因为SpringDataJPA的save方法有修改功能,所以点保存后这里会自动实现修改并保存
+					$("#areaForm").form("load",rows[0])
+				}else{
+					$.messager.alert("提示","只能选择一条数据进行修改", "info")
+				}
 			}
 			
 			function doDelete(){
@@ -186,6 +195,12 @@
 			function doDblClickRow(){
 				alert("双击表格数据...");
 			}
+			
+			function savearea() {
+				if($("#areaForm").form("validate")){
+					$("#areaForm").submit();
+				}
+			}
 		</script>
 	</head>
 
@@ -196,15 +211,16 @@
 		<div class="easyui-window" title="区域添加修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 			<div region="north" style="height:31px;overflow:hidden;" split="false" border="false">
 				<div class="datagrid-toolbar">
-					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+					<a id="save" icon="icon-save" onclick="savearea()" class="easyui-linkbutton" plain="true">保存</a>
 				</div>
 			</div>
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
-				<form>
+				<form id="areaForm" method="post" action="../../areaAction_save.action">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">区域信息</td>
+							<input type="hidden" name="id"/>
 						</tr>
 						<tr>
 							<td>省</td>

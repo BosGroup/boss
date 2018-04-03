@@ -1,11 +1,13 @@
 package com.imooc.bos.portal.web.action;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.Session;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -107,12 +109,20 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
             //存储激活码,使用spring-data-redis,key使用用户的手机号作为唯一标识,设置有效期为一天
             redisTemplate.opsForValue().set(model.getTelephone(), activeCode,1,TimeUnit.DAYS);            
             
-            String emailBody = "感谢您注册本网站的账号,请在24小时之内点击<a href='http://localhost:8280/bos_portal/customerAction_active.action?activeCode="
+            final String emailBody = "感谢您注册本网站的账号,请在24小时之内点击<a href='http://localhost:8280/bos_portal/customerAction_active.action?activeCode="
                     +activeCode+"&telephone=" + model.getTelephone()+ "'>激活链接</a>激活您的帐号";
             
             //根据用户填写的邮箱地址发送激活邮件,此处也可以用消息队列完成,节省访问时间
-            MailUtils.sendMail("激活邮件",emailBody,model.getEmail());
-            
+           // MailUtils.sendMail("激活邮件",emailBody,model.getEmail());
+            jmsTemplate.send("mail", new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    MapMessage message = session.createMapMessage();
+                    message.setString("emailBody", emailBody);
+                    message.setString("mail", model.getEmail());
+                    return message;
+                }
+            });
             return SUCCESS;
         }
         
@@ -148,10 +158,13 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
     
     
     //################## 用户登录 #########################
-    @Action(value="customerAction_login",results = {@Result(name = "success", location = "/index.html",type = "redirect"),
-            @Result(name = "error", location = "/login.html",type = "redirect"),
-            @Result(name = "unactived", location = "/login.html",type = "redirect")})
-    public String login(){
+    //返回json数据===1：账号或密码错误  2：验证码错误   3：用户未激活  4：登录成功 5：用户不存在
+    
+    @Action(value="customerAction_login")
+    public String login() throws IOException{
+        System.out.println("checkcode===="+checkcode);
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("text/html;charset=UTF-8");
         //获取登录校验码
         String serverCode = (String) ServletActionContext.getRequest().getSession().getAttribute("validateCode");
         //验证校验码checkcode已被属性驱动获取
@@ -163,10 +176,16 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
             .accept(MediaType.APPLICATION_JSON)
             .query("telephone", model.getTelephone())  //参数
             .get(Customer.class);     //返回值
-            
+            System.out.println("telephone====="+model.getTelephone());
+            if(customer==null){
+                //用户不存在
+                response.getWriter().write("5");
+                return NONE;
+            }
             //空指针异常customer.getType()的返回值为Integer类型,为对象类型,注意区别int和Integer
             if(customer != null && customer.getType() != null){
                 if(customer.getType() == 1){
+                    System.out.println("password===="+model.getPassword());
                     // 激活了,登录
                     Customer c = WebClient.create("http://localhost:8180/crm/webService/customerService/login")
                             .type(MediaType.APPLICATION_JSON)
@@ -177,17 +196,23 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
                     if(c != null){
                         //将用户存储到域对象
                         ServletActionContext.getRequest().getSession().setAttribute("user", c);
-                        return SUCCESS;
+                        response.getWriter().write("4");
+                        return NONE;
                     }else{
-                        return ERROR;
+                        response.getWriter().write("1");
+                        return NONE;
                     }
-                }else{
-                    //用户已经注册成功，但是没有激活    重新发送邮件激活???
-                    return "unactived";
                 }
+                   
+            }else{
+              //用户已经注册成功，但是没有激活    重新发送邮件激活???
+                response.getWriter().write("3");
+                return NONE;
             }
         }
-        return ERROR;
+        
+        response.getWriter().write("2");
+        return NONE;
     }
 }
   

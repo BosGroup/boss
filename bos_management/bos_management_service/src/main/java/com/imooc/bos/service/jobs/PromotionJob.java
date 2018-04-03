@@ -17,8 +17,10 @@ public void modifyStatus(){
     List<Promotion> list =promotionRepository.findAll();
     Date thisTime=new Date();
     for (Promotion promotion : list) {
-        if(promotion.getEndDate().before(thisTime)){
+        if(promotion.getEndDate().before(thisTime)&&promotion.getStatus().equals("1")){
+            
             promotion.setStatus("2");
+            promotionRepository.save(promotion);
         }
     }
     

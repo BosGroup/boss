@@ -28,9 +28,9 @@
 	-->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.198.198:1521:ORCL" />
-		<property name="user" value="heima28" />
-		<property name="password" value="heima28" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.146.145:1521:ORCL" />
+		<property name="user" value="imooc" />
+		<property name="password" value="imooc" />
 	</bean>
 	<!-- spring整合JPA -->
 	<bean id="entityManagerFactory"
@@ -172,17 +172,17 @@
 				perms[""]:给资源文件添加权限,括号内为权限的名字,在授权的方法中可授权
 			 -->
 			<value>
-				<!-- /css/* = anon
+				/css/* = anon
 				/data/* = anon
 				/images/* = anon
 				/js/** = anon
 				/validatecode.jsp* = anon
 				/userAction_login.action = anon
 				/webService/** = anon
-				/upload/* = anon -->
+				/upload/* = anon
 				<!-- /courierAction_pageQuery.action = perms["courierAction_pageQuery"] -->
 				<!-- /hi.html = perms["courierAction_pageQuery"] -->
-				/** = anon
+				/** = authc
 			</value>
 		</property>
 	</bean>

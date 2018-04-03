@@ -66,8 +66,8 @@ public class CourierServiceImpl implements CourierService {
     } 
 
     // 查看定区关联的快递员
-    @Override
-    public List<Courier> findAssociatedCourier(Long fixedAreaId) {
+    @Override 
+    public List<Courier> findAssociatedCourier(Long fixedAreaId) { 
         return courierRepository.findByFixedArea(fixedAreaId);
     } 
 

@@ -3,4 +3,5 @@
 .settings
 .classpath
 target
-.xml
+
+applicationContext.xml

@@ -89,5 +89,21 @@ public class StandardAction extends CommonAction<Standard>{
         
         return NONE;
     }
+    
+ // ################### 批量删除分区信息 ####################
+    // 使用属性驱动获取要删除的快递员的Id
+    private String ids;
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+
+    @Action(value = "standardAction_batchDel", results = {
+            @Result(name = "success", location = "/pages/base/standard.html", type = "redirect")})
+    public String batchDel() {
+        standardService.batchDel(ids);
+        return SUCCESS;
+    }
+    
 }
   

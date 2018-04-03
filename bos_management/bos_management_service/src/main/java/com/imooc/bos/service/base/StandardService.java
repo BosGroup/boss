@@ -25,5 +25,7 @@ public interface StandardService {
      */
     Page<Standard> findAll(Pageable pageable);
 
+    void batchDel(String ids);
+
 }
   

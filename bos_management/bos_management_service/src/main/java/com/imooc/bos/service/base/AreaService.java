@@ -40,6 +40,14 @@ public interface AreaService {
      */
     List<Object[]> exportCharts();
 
+    /**  
+     * 保存单个区域
+     * @param model  
+     */
+    void saveone(Area model);
+
+	void delete(String ids);
+
 
 
 }

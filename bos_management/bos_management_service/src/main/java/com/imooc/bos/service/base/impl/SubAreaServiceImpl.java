@@ -2,6 +2,7 @@ package com.imooc.bos.service.base.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +55,19 @@ public class SubAreaServiceImpl implements SubAreaService {
     public List<Object[]> exportCharts() {
           
         return subAreaRepository.exportCharts();
+    }
+
+    @Override
+    public void batchDel(String ids) {
+        // 真实开发中只有逻辑删除
+        // 判断数据是否为空 null " "
+        if (StringUtils.isNotEmpty(ids)) {
+            // 切割数据
+            String[] split = ids.split(",");
+            for (String id : split) {
+                subAreaRepository.delete(Long.parseLong(id));
+            }
+        }
     }
 
 }

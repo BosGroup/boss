@@ -43,6 +43,8 @@ public interface SubAreaService {
 
      //导出图表
     List<Object[]> exportCharts();
+
+    void batchDel(String ids);
    
 
 }

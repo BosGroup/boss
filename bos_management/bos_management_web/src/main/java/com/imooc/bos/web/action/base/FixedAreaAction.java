@@ -1,10 +1,8 @@
 package com.imooc.bos.web.action.base;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
-import javax.jws.WebService;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -12,7 +10,6 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.apache.xml.resolver.helpers.PublicId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -56,10 +53,15 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
     }
 
     // ################### 分页查询定区 ####################
-    // AJAX请求不需要跳转页面
+    private String subareaName;
+    public void setSubareaName(String subareaName) {
+        this.subareaName = subareaName;
+    }
+    
     @Action(value = "fixedAreaAction_pageQuery")
     public String pageQuery() throws IOException {
 
+        
         // EasyUI的页码是从1开始的, SPringDataJPA的页码是从0开始的, 所以要-1
         Pageable pageable = new PageRequest(page - 1, rows);
         Page<FixedArea> page = fixedAreaService.findAll(pageable);
@@ -175,5 +177,6 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
         fixedAreaService.batchDel(ids);
         return SUCCESS;
     }
-
+    
+    
 }

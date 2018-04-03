@@ -2,6 +2,7 @@ package com.imooc.bos.service.base;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.imooc.bos.domain.base.FixedArea;
 
@@ -45,6 +46,8 @@ public interface FixedAreaService {
      * @param ids
      */
     void batchDel(String ids);
+
+    Page<FixedArea> findAll(Specification<FixedArea> specification, Pageable pageable);
 
 }
   

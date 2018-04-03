@@ -36,7 +36,6 @@ public class SubArea {
     private String assistKeyWords; // 辅助关键字
     
     @Column(name = "C_POSITION")
-    private String position; // 分区 的位置
  
     @ManyToOne
     @JoinColumn(name = "C_AREA_ID") 

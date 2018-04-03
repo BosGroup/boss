@@ -81,6 +81,11 @@ public class UserAction extends CommonAction<User>{
                 //方法的返回值由Realm中doGetAuthenticationInfo方法定义SimpleAuthenticationInfo对象的时候,第一个参数决定的
                 User user = (User) subject.getPrincipal();
                 
+                String remark = user.getRemark();
+                if (remark != null && "1".equals(remark)) {
+                    System.out.println("该用户已注销!");
+                    return LOGIN;
+                }
                 //将user存入域对象
                 ServletActionContext.getRequest().getSession().setAttribute("user", user);
                 return SUCCESS;

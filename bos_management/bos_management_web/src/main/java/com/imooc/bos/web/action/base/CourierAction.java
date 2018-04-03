@@ -214,7 +214,7 @@ public class CourierAction extends CommonAction<Courier>{
     }
     
     // 查看定区关联的快递员  
-    @Action(value="courierAction_findAssociatedCourier")
+    @Action(value="courierAction_findAssociatedCourier") 
     public String findAssociatedCourier() throws IOException{
         List<Courier> list = courierService.findAssociatedCourier(getModel().getId());
         JsonConfig jsonConfig = new JsonConfig();

@@ -82,6 +82,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public Customer isActived(String telephone) {
+        System.out.println("crm======="+telephone);
         return customerRepository.findByTelephone(telephone);
     }
 

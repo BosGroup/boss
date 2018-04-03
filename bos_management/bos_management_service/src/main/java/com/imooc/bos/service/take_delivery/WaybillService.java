@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.imooc.bos.service.take_delivery;
 
 import java.util.List;

@@ -49,8 +49,8 @@ public class TakeTime {
     private String company; // 所属公司
 
     @Column(name = "C_OPERATING_TIME")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date operatingTime;// 操作时间
+    /*@Temporal(TemporalType.TIMESTAMP)*/
+    private String operatingTime;// 操作时间
     
     @Column(name = "C_OPERATOR")
     private String operator; // 操作员
@@ -139,11 +139,11 @@ public class TakeTime {
         this.company = company;
     }
 
-    public Date getOperatingTime() {
+    public String getOperatingTime() {
         return operatingTime;
     }
 
-    public void setOperatingTime(Date operatingTime) {
+    public void setOperatingTime(String operatingTime) {
         this.operatingTime = operatingTime;
     }
 

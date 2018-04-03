@@ -2,7 +2,10 @@ package com.imooc.bos.service.base.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,19 +16,43 @@ import com.imooc.bos.service.base.TakeTimeService;
 /**  
  * ClassName:TakeTimeServiceImpl <br/>  
  * Function:  <br/>  
- * Date:     2018年3月20日 下午11:25:50 <br/>       
+ * Date:     2018年3月21日 下午4:13:56 <br/>       
  */
-
-@Transactional
 @Service
-public class TakeTimeServiceImpl implements TakeTimeService{
-    
+@Transactional
+public class TakeTimeServiceImpl implements TakeTimeService {
+
     @Autowired
     private TakeTimeRepository takeTimeRepository;
+
+
+    @Override
+    public void save(TakeTime takeTime) {
+        takeTimeRepository.save(takeTime);
+    }
+
+
+    @Override
+    public Page<TakeTime> findAll(Pageable pageable) {
+        return takeTimeRepository.findAll(pageable);
+    }
+
 
     @Override
     public List<TakeTime> findAll() {
         return takeTimeRepository.findAll();
+    }
+
+
+    @Override
+    public void batchDel(String ids) {
+        if (StringUtils.isNotEmpty(ids)) {
+            // 切割数据
+            String[] split = ids.split(",");
+            for (String id : split) {
+                takeTimeRepository.delete(Long.parseLong(id));
+            }
+        }
     }
 }
   

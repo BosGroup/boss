@@ -46,6 +46,8 @@ public interface AreaService {
      */
     void saveone(Area model);
 
+	void delete(String ids);
+
 
 
 }

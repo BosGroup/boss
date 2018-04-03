@@ -320,5 +320,17 @@ public class AreaAction extends CommonAction<Area> {
      areaService.saveone(getModel());
      return SUCCESS;
  }
+    private String ids;
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+
+    @Action(value = "areaAction_batchDel", results = {
+            @Result(name = "success", location = "/pages/base/area.html", type = "redirect")})
+    public String batchDel() {
+        areaService.delete(ids);
+        return SUCCESS;
+    }
 }
   

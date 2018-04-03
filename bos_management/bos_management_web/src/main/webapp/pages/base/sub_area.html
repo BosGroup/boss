@@ -53,9 +53,9 @@
 				
 			}
 			
-			function doImport(){
+			/* function doImport(){
 				alert("导入");
-			}
+			} */
 			
 			//分区导出Excel
 			function doExportExcel(){
@@ -146,8 +146,8 @@
 			},{
 				id : 'button-import',
 				text : '导入',
-				iconCls : 'icon-redo',
-				handler : doImport
+				iconCls : 'icon-redo'/* ,
+				handler : doImport */
 			},{
 				id : 'button-export',
 				text : '导出Excel',
@@ -250,6 +250,11 @@
 					columns : columns,
 					onDblClickRow : doDblClickRow
 				});
+				
+				// 给导入按钮绑定事件,在区域管理数据表格加载之后
+				$("#button-import").upload({
+					action : "../../subAreaAction_importXLS.action"
+				})
 				
 				// 添加、修改分区
 				$('#addWindow').window({

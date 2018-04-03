@@ -30,29 +30,35 @@
 		alert("修改...");
 	}
 
-	function doDelete() {
-		var rows = $("#grid").datagrid("getSelections")
-		if(rows.length == 0){
-			$.messager.alert("提示", "您至少要选择一条数据进行操作", "info")
-		}else{
-			$.messager.confirm('删除对话框','您确定要删除这些定区吗',function(r) {
-				if(r){
-					// 创建一个数组
-					var arr = new Array();
-					for (var i = 0; i < rows.length; i++) {
-						// 向数组中插入数据
-						arr.push(rows[i].id)
-					}
-					// 如何发送请求
-					//form表单, AJAX, window.location.href
-					window.location.href="../../fixedAreaAction_batchDel.action?ids="+arr.toString()
-				}
-			});
-		}
+	//执行查询
+	function doSearch() {
+		$("#searchWindow").window("open")
 	}
 
-	function doSearch() {
-		$('#searchWindow').window("open");
+	function doDelete() {
+		var rows = $("#grid").datagrid("getSelections")
+		if (rows.length == 0) {
+			$.messager.alert("提示", "您至少要选择一条数据进行操作", "info")
+		} else {
+			$.messager
+					.confirm(
+							'删除对话框',
+							'您确定要删除这些定区吗',
+							function(r) {
+								if (r) {
+									// 创建一个数组
+									var arr = new Array();
+									for (var i = 0; i < rows.length; i++) {
+										// 向数组中插入数据
+										arr.push(rows[i].id)
+									}
+									// 如何发送请求
+									//form表单, AJAX, window.location.href
+									window.location.href = "../../fixedAreaAction_batchDel.action?ids="
+											+ arr.toString()
+								}
+							});
+		}
 	}
 
 	//关联分区
@@ -154,18 +160,18 @@
 		id : 'button-edit',
 		text : '修改',
 		iconCls : 'icon-edit',
-		handler : function(){
+		handler : function() {
 			//判断用户勾选的数据的条数
 			var result = $("#grid").datagrid("getSelections")
-			if(result.length == 1){
+			if (result.length == 1) {
 				//勾选一条数据的时候才可以进行修改
 				//打开窗口
 				$("#addWindow").window("open")
 				//回填数据到form表单, load读取记录填充到表单中
 				//因为SpringDataJPA的save方法有修改功能,所以点保存后这里会自动实现修改并保存
-				$("#fixedAreaForm").form("load",result[0])
-			}else{
-				$.messager.alert("提示","您只能选择一条数据进行修改", "info")
+				$("#fixedAreaForm").form("load", result[0])
+			} else {
+				$.messager.alert("提示", "您只能选择一条数据进行修改", "info")
 			}
 		}
 	}, {
@@ -224,7 +230,7 @@
 		align : 'center'
 	}, {
 		field : 'company',
-		title : '所属公司', 
+		title : '所属公司',
 		width : 120,
 		align : 'center'
 	} ] ];
@@ -272,47 +278,50 @@
 			height : 400,
 			resizable : false
 		});
-		$("#btn").click(function() {
+		/* $("#btn").click(function() {
 			alert("执行查询...");
-		});
+		}); */
 
 	});
 
-	function doDblClickRow(index,row) {
+	function doDblClickRow(index, row) {
 		/* alert("双击表格数据..."); */
 		var id = row.id;
 		//查看关联客户
-		$('#association_customer').datagrid({
-			fit : true,
-			border : true,
-			rownumbers : true,
-			striped : true,
-			url : "../../fixedAreaAction_findAssociatedCustomers.action?id="+id, 
-			columns : [ [ {
-				field : 'id',
-				title : '客户编号',
-				width : 120,
-				align : 'center'
-			}, {
-				field : 'username',
-				title : '客户名称',
-				width : 120,
-				align : 'center'
-			}, {
-				field : 'department',
-				title : '所属单位',
-				width : 120,
-				align : 'center'
-			} ] ]
-		});
-		
+		$('#association_customer')
+				.datagrid(
+						{
+							fit : true,
+							border : true,
+							rownumbers : true,
+							striped : true,
+							url : "../../fixedAreaAction_findAssociatedCustomers.action?id="
+									+ id,
+							columns : [ [ {
+								field : 'id',
+								title : '客户编号',
+								width : 120,
+								align : 'center'
+							}, {
+								field : 'username',
+								title : '客户名称',
+								width : 120,
+								align : 'center'
+							}, {
+								field : 'department',
+								title : '所属单位',
+								width : 120,
+								align : 'center'
+							} ] ]
+						});
+
 		//查看关联快递员
 		$('#association_courier').datagrid({
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../courierAction_findAssociatedCourier.action?id="+id,
+			url : "../../courierAction_findAssociatedCourier.action?id=" + id,
 			columns : [ [ {
 				field : 'courierNum',
 				title : '工号',
@@ -341,10 +350,10 @@
 			}, {
 				field : 'standard.name',
 				title : '取派标准',
-				width : 120 ,
-				align : 'center' , 
-				formatter : function(data,row, index){
-					if(row.standard != null){
+				width : 120,
+				align : 'center',
+				formatter : function(data, row, index) {
+					if (row.standard != null) {
 						return row.standard.name;
 					}
 					return "";
@@ -364,8 +373,8 @@
 				title : '收派时间',
 				width : 120,
 				align : 'center',
-				formatter : function(data,row, index){
-					if(row.takeTime != null){
+				formatter : function(data, row, index) {
+					if (row.takeTime != null) {
 						return row.takeTime.name;
 					}
 					return "";
@@ -382,7 +391,6 @@
 				align : 'center'
 			} ] ]
 		});
-		
 
 		////查看关联分区
 		$('#association_subarea').datagrid({
@@ -390,7 +398,7 @@
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../subAreaAction_findAssociatedsubAreas.action?id="+id,
+			url : "../../subAreaAction_findAssociatedsubAreas.action?id=" + id,
 			columns : [ [ {
 				field : 'id',
 				title : '分拣编号',
@@ -457,8 +465,6 @@
 			} ] ]
 		});
 
-		
-
 	}
 </script>
 
@@ -468,6 +474,34 @@
 		if ($("#fixedAreaForm").form("validate")) {
 			$("#fixedAreaForm").submit();
 		}
+	}
+
+	//将表单中的数据序列化成json对象的方法
+	$.fn.serializeJson = function() {
+		var serializeObj = {};
+		var array = this.serializeArray();
+		var str = this.serialize();
+		$(array).each(
+				function() {
+					if (serializeObj[this.name]) {
+						if ($.isArray(serializeObj[this.name])) {
+							serializeObj[this.name].push(this.value);
+						} else {
+							serializeObj[this.name] = [
+									serializeObj[this.name], this.value ];
+						}
+					} else {
+						serializeObj[this.name] = this.value;
+					}
+				});
+		return serializeObj;
+	};
+
+	function doOnSearch() {
+		// 把form表单中input节点的name的值和用户输入的内容,拼接成json字符串
+		var result = $("#searchForm").serializeJson();
+		// 让Datagrid重新发起查询请求,并把用户输入的查询条件传递给后台
+		$('#grid').datagrid('load', result);
 	}
 </script>
 </head>
@@ -555,10 +589,10 @@
 	</div>
 	<!-- 查询定区 -->
 	<div class="easyui-window" title="查询定区窗口" id="searchWindow"
-		collapsible="false" minimizable="false" maximizable="false"
-		style="top: 20px; left: 200px">
+		closed="true" collapsible="false" minimizable="false"
+		maximizable="false" style="top: 20px; left: 200px">
 		<div style="overflow: auto; padding: 5px;" border="false">
-			<form>
+			<form id="searchForm">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
 						<td colspan="2">查询条件</td>
@@ -566,28 +600,25 @@
 					<tr>
 						<td>定区编码</td>
 						<td>
-							<input type="text" name="id" class="easyui-validatebox"
-								required="true" />
+							<input type="text" name="id" class="easyui-validatebox" />
 						</td>
 					</tr>
 					<tr>
 						<td>所属单位</td>
 						<td>
-							<input type="text" name="courier.company"
-								class="easyui-validatebox" required="true" />
+							<input type="text" name="company" class="easyui-validatebox" />
 						</td>
 					</tr>
 					<tr>
 						<td>分区</td>
 						<td>
-							<input type="text" name="subareaName" class="easyui-validatebox"
-								required="true" />
+							<input type="text" name="subareaName" class="easyui-validatebox" />
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
-							<a id="btn" href="#" class="easyui-linkbutton"
-								data-options="iconCls:'icon-search'">查询</a>
+							<a onclick="doOnSearch()" id="btn" href="#"
+								class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
 						</td>
 					</tr>
 				</table>

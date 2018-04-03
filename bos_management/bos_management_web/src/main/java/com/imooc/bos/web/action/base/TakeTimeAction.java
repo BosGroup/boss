@@ -1,6 +1,7 @@
 package com.imooc.bos.web.action.base;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -53,13 +54,15 @@ public class TakeTimeAction extends CommonAction<TakeTime> {
         return NONE;
     }
 
-    /*
-     * @Action(value = "taketimeAction_listajax") 
-     *  public String listajax2() throws IOException {
-     *      List<TakeTime> list = takeTimeService.findAll(); 
-     *      list2json(list, null); return NONE; 
-     * }
-     */
+    // ################### 查询所有收派时间 ####################
+    @Action("takeTimeAction_listajax")
+    public String listajax() throws IOException {
+
+        List<TakeTime> list = takeTimeService.findAll();
+
+        list2json(list, null);
+        return NONE;
+    }
 
     // 删除收派时间
     // ################### 批量删除快递员信息 ####################

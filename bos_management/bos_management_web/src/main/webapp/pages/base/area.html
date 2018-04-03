@@ -26,7 +26,16 @@
 			}
 			
 			function doView(){
-				alert("修改...");
+				var rows = $("#grid").datagrid("getSelections")
+				if(rows.length==1){
+					//打开窗口
+					$('#addWindow').window("open");
+					//回填数据到form表单, load读取记录填充到表单中
+					//因为SpringDataJPA的save方法有修改功能,所以点保存后这里会自动实现修改并保存
+					$("#areaForm").form("load",rows[0])
+				}else{
+					$.messager.alert("提示","只能选择一条数据进行修改", "info")
+				}
 			}
 			
 			function doDelete(){
@@ -211,6 +220,7 @@
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">区域信息</td>
+							<input type="hidden" name="id"/>
 						</tr>
 						<tr>
 							<td>省</td>

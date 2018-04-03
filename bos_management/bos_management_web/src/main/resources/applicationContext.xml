@@ -28,9 +28,9 @@
 	-->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.45.200:1521:ORCL" />
-		<property name="user" value="heima_bos_team05" />
-		<property name="password" value="heima_bos_team05" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.74.10:1521:ORCL" />
+		<property name="user" value="heima28" />
+		<property name="password" value="heima28" />
 	</bean>
 	<!-- spring整合JPA -->
 	<bean id="entityManagerFactory"
@@ -217,13 +217,41 @@
 	</bean>
 	
 	
+	<!-- ===========promotion============== -->
+	<!-- 注册目标对象 -->
+	<bean id="promotionJob" class="com.imooc.bos.service.jobs.PromotionJob"></bean>
+
+	<!-- 注册任务详情,通过反射的方式调用目标类的目标方法 -->
+	<bean id="promotionjobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 注入目标对象 -->
+		<property name="targetObject" ref="promotionJob"></property>
+		<!-- 注入目标方法 -->
+		<property name="targetMethod" value="modifyStatus"></property>
+	</bean>
+	<!-- 注册触发器,可以理解为这是一个闹钟 -->
+	<bean id="promotionTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<!-- 指定触发的规则.闹钟在什么时候响起 -->
+		<property name="cronExpression">
+			<!-- 每隔五秒钟执行一次 -->
+			<value>0/5 * * * * ?</value>
+		</property>
+		<!-- 注入任务详情,闹钟响起的时候要做什么事情 -->
+		<property name="jobDetail" ref="promotionjobDetail"></property>
+	</bean>
+	
 	<!-- 任务工厂类,spring提供的一个工厂类,这个类可以简单理解为是一台可以设置多个闹钟的手机 -->
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 	
 		<!-- 注入触发器,可以简单理解为闹钟的集合 -->
 		<property name="triggers">
 			<!-- 指定具体的触发器,可以简单理解为具体的一个闹钟 -->
+			<list>
 			<ref bean="emailTrigger"/>
+			<ref bean="promotionTrigger" />
+			</list>
+			
 		</property>
 	
 	</bean>

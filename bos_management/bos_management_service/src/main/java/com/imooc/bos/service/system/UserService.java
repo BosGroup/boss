@@ -27,5 +27,7 @@ public interface UserService {
      */
     Page<User> findAll(Pageable pageable);
 
+    void batchDel(String ids);
+
 }
   

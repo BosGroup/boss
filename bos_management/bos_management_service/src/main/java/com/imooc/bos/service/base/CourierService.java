@@ -8,43 +8,53 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.imooc.bos.domain.base.Courier;
 
-/**  
- * ClassName:CourierService <br/>  
- * Function:  <br/>  
- * Date:     2018年3月14日 下午7:52:15 <br/>       
+/**
+ * ClassName:CourierService <br/>
+ * Function: <br/>
+ * Date: 2018年3月14日 下午7:52:15 <br/>
  */
 public interface CourierService {
 
-    /**  
+    /**
      * 保存快递员信息
-     * @param model  
+     * 
+     * @param model
      */
     void save(Courier model);
 
-    /**  
+    /**
      * 无条件分页查询快递员信息
+     * 
      * @param pageable
-     * @return  
+     * @return
      */
     Page<Courier> findAll(Pageable pageable);
 
-    /**  
+    /**
      * 批量删除快递员信息
-     * @param ids  
+     * 
+     * @param ids
      */
     void batchDel(String ids);
-    
-    /**  
+
+    /**
      * 有条件分页查询快递员信息
+     * 
      * @param pageable
-     * @return  
+     * @return
      */
     Page<Courier> findAll(Specification<Courier> specification, Pageable pageable);
-
-    /**  
+ 
+    /**
      * 查询在职快递员
-     * @return  
+     * 
+     * @return
      */
-    List<Courier> findAvaible();
+    List<Courier> findAvaible(); 
+
+    // 查看定区关联的快递员
+    List<Courier> findAssociatedCourier(Long fixedAreaId);
+
+    void doRestore(String ids);
+
 }
-  

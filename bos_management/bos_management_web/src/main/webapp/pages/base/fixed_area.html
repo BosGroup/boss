@@ -137,7 +137,20 @@
 		id : 'button-edit',
 		text : '修改',
 		iconCls : 'icon-edit',
-		handler : doEdit
+		handler : function(){
+			//判断用户勾选的数据的条数
+			var result = $("#grid").datagrid("getSelections")
+			if(result.length == 1){
+				//勾选一条数据的时候才可以进行修改
+				//打开窗口
+				$("#addWindow").window("open")
+				//回填数据到form表单, load读取记录填充到表单中
+				//因为SpringDataJPA的save方法有修改功能,所以点保存后这里会自动实现修改并保存
+				$("#fixedAreaForm").form("load",result[0])
+			}else{
+				$.messager.alert("提示","您只能选择一条数据进行修改", "info")
+			}
+		}
 	}, {
 		id : 'button-delete',
 		text : '删除',

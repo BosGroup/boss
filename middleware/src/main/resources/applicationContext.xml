@@ -57,5 +57,6 @@
 			ref: 引用对象,指定真正的消费者是谁,类名的首字符小写,若类名开头有多个大写字母,则不用改小写
 		-->
 		<jms:listener destination="sms" ref="SMSConsumer" />
+		<jms:listener destination="mail" ref="mailConsumer" />
 	</jms:listener-container>
 </beans>

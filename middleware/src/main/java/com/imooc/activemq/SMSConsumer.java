@@ -26,7 +26,7 @@ public class SMSConsumer implements MessageListener{
             String code = mapMessage.getString("code");
             System.out.println(telephone+":"+code);
             //发送短信
-            SmsUtils.sendSms(telephone, code);
+            //SmsUtils.sendSms(telephone, code);
         } catch (Exception e) {
             e.printStackTrace();  
         }

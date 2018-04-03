@@ -18,11 +18,16 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
 import com.imooc.bos.domain.take_delivery.WayBill;
 import com.imooc.bos.service.take_delivery.WaybillService;
 import com.imooc.bos.web.action.CommonAction;
+
+import net.sf.json.JsonConfig;
 
 /**
  * ClassName:WaybillAction <br/>
@@ -123,5 +128,36 @@ public class WaybillAction extends CommonAction<WayBill> {
         return SUCCESS;
         
     }
+    
+    @Action("wayBillAction_findAll")
+    public String findAll() throws IOException{
+        
+        Page<WayBill> page2 = waybillService.findAll(null);
+        List<WayBill> list = page2.getContent();
+        
+        JsonConfig jsonConfig=new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"order","sendArea","recArea"});
+        list2json(list, jsonConfig);
+        
+        return NONE;
+    }
+    
+    @Action("waybillAction_pageQuery")
+    public String pageQuery() throws IOException{
+        
+        Pageable pageable=new PageRequest(page-1, rows);
+        Page<WayBill> page=waybillService.findAll(pageable);
+        
+        JsonConfig jsonConfig=new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"order","sendArea","recArea"});
+        
+        page2json(page, jsonConfig);
+        
+        return NONE;
+    }
+    
+    
+    
+    
     
 }

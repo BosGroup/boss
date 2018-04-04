@@ -3,13 +3,11 @@ package com.imooc.bos.service.take_delivery.impl;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import com.imooc.bos.dao.take_delivery.WaybillRepository;
 import com.imooc.bos.domain.take_delivery.WayBill;
@@ -39,15 +37,12 @@ public class WaybillServiceImpl implements WaybillService {
 
     @Override
     public void batchImport(List<WayBill> list) {
-          
         waybillRepository.save(list); 
         
     }
-	
-	 @Override
+
+    @Override
     public Page<WayBill> findAll(Pageable pageable) {
-          
         return waybillRepository.findAll(pageable);
     }
-
 }

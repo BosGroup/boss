@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
@@ -33,6 +35,7 @@ import com.imooc.bos.domain.take_delivery.WayBill;
 import com.imooc.bos.service.take_delivery.WaybillService;
 import com.imooc.bos.web.action.CommonAction;
 
+import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 /**
@@ -61,7 +64,6 @@ public class WaybillAction extends CommonAction<WayBill> {
         String msg = "0";
         try {
             //int i =10/0;
-            
             waybillService.save(getModel());
         } catch (Exception e) {
             e.printStackTrace();  
@@ -195,7 +197,7 @@ public class WaybillAction extends CommonAction<WayBill> {
             cell.setCellValue(title2[i]);
         }
         // 文件名
-        String fileName = "area.xls";
+        String fileName = "yundan.xls";
      
         HttpServletResponse response = ServletActionContext.getResponse();
         ServletContext servletContext = ServletActionContext.getServletContext();
@@ -210,8 +212,20 @@ public class WaybillAction extends CommonAction<WayBill> {
         workbook.close();
         return NONE;
     }
-   
     
-    
-    
+    @Action(value = "wayBillAction_pageQuery1")
+    public String pageQuery1() throws IOException {
+        Pageable pageable = new PageRequest(page - 1, rows);
+        Page<WayBill> page = waybillService.findAll(pageable);
+        long total = page.getTotalElements();
+        List<WayBill> list = page.getContent();
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", list);
+        String json = JSONObject.fromObject(map).toString();
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(json);
+        return NONE;
+    }
 }
